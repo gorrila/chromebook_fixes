@@ -25,9 +25,7 @@ Script elementary14.py is for Freya with prompts to select installed software
 
 3. Delete your wired connection from Network Manager to avoid it trying to connect to it all the time. Hoping to add this to the script soon.
 
-4. Assign Fullscreen (F4) to Toggle Fullscreen in System Settings>Keyboard>Windows>Shortcuts (Luna doesn't have anything mapped to Toggle Fullscreen by default. Not sure about Luna but will look into finding the conf file for this and adding it to the script)
-
-5. Enjoy elementary OS
+4. Enjoy elementary OS
 
 
 
