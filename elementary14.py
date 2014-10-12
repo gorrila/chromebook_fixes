@@ -11,13 +11,13 @@ import sys
 
 print("Script made by Ian Richardson / iantrich.com, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
-cont = raw_input("Use at your own risk. Do you wish to continue? [Y/n] ")
+cont = input("Use at your own risk. Do you wish to continue? [Y/n] ")
 if cont is not 'y' and cont is not 'Y':
     exit()
 
-raw_input("Please connect to internet service before continuing. Hit Enter when ready...")
+input("Please connect to internet service before continuing. Hit Enter when ready...")
 
-username = raw_input("Carefully enter your username: ")
+username = input("Carefully enter your username: ")
 
 print("Grabbing kernel 3.17 stable...may take a few moments")
 kernel = urllib.URLopener()
@@ -76,40 +76,35 @@ for line in fileinput.input("/etc/default/grub", inplace=True):
 os.system("update-grub")
 os.system("update-grub2")
 
-# Adjust touchpad sensitivity
-print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
-section = False
-for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
-    if section:
-        sys.stdout.write("""      Option "FingerLow" "5"
-      Option "FingerHigh" "16\"\n""")
-        section = False
-    if "input/event*" not in line:
+print("Adjust power button settings.")
+input("Be sure to go to System Settings>Power>Power Button and change to 'Ask Me'. Hit Enter to continue...")
+# Edit logind.conf
+for line in fileinput.input("/etc/systemd/logind.conf"):
+    if "Handlepowerkey" not in line:
         sys.stdout.write(line)
     else:
-        sys.stdout.write(line)
-        section = True    
+        sys.stdout.write("Handlepowerkey=ignore")
 
-guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
+driver = input("Install ChromeOS touchpad driver? [Y/n]? ")
+if driver is 'y' or driver is 'Y':
+    os.system("add-apt-repository -y ppa:hugegreenbug/cmt")
+    os.system("apt-get update -y")
+    os.system("apt-get install -y libevdevc libgestures  xf86-input-cmt")
+    os.system("mv /usr/share/X11/xorg.conf.d/50-synaptics.conf /usr/share/X11/xorg.conf.d/50-synaptics.conf.old")
+    os.system("cp /usr/share/xf86-input-cmt/50-touchpad-cmt-peppy.conf /usr/share/X11/xorg.conf.d/")
+
+guake = input("Install Guake: A dropdown terminal? [Y/n]? ")
 if guake is 'y' or guake is 'Y':
     os.system("apt-get install -y guake")
 
-numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
+numix = input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
 if numix is 'y' or numix is 'Y':
     os.system("add-apt-repository -y ppa:numix/ppa")
     os.system("add-apt-repository -y ppa:versable/elementary-update")
-    os.system("apt-get update -y")
+    os.system("apt-get update -y ")
     os.system("apt-get install -y numix-gtx-theme numix-icon-theme-circle elementary-tweaks")
 
-wing = raw_input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
-if wing is 'y' or wing is 'Y':
-    if numix is not 'y' and numix is not 'Y':
-        os.system("add-apt-repository ppa:numix/ppa")
-        os.system("add-apt-repository ppa:versable/elementary-update")
-        os.system("apt-get update")
-    os.system("apt-get install wingpanel-slim super-wingpanel")
-
-keys = raw_input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
+keys = input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
 if keys is 'y' or keys is 'Y':
     os.system("apt-get install -y xbindkeys xdotool")
     # Map Super_L to the Search key
@@ -139,24 +134,24 @@ F4
 shift+BackSpace""")
     os.system("chmod +x ~/.xbindkeysrc")
 
-java = raw_input("Install Oracle Java 7? [Y/n]? ")
+java = input("Install Oracle Java 7? [Y/n]? ")
 if java is 'y' or java is 'Y':
     print("Follow the on-screen instructions to finish the installation. It might take awhile")
     os.system("add-apt-repository -y ppa:webupd8team/java")
     os.system("apt-get update -y")
     os.system("apt-get install -y python-software-properties oracle-java7-installer")
 else:
-    java = raw_input("Install Open JDK 7? [Y/n]? ")
+    java = input("Install Open JDK 7? [Y/n]? ")
     if java is 'y' or java is 'Y':
         os.system("apt-get install -y openjdk-7-jdk")
 
-battery = raw_input("Install TLP Battery Saver? [Y/n]? ")
+battery = input("Install TLP Battery Saver? [Y/n]? ")
 if keys is 'y' or keys is 'Y':
     os.system("add-apt-repository -y ppa:linrunner/tlp")
     os.system("apt-get update -y")
     os.system("apt-get install -y tlp tlp-rdw")
 
-chrome = raw_input("Install Chrome browser? [Y/n]? ")
+chrome = input("Install Chrome browser? [Y/n]? ")
 if chrome is 'y' or chrome is 'Y':
     print("Downloading Chrome. This may take a few moments...")
     kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_amd64.deb")
@@ -164,27 +159,27 @@ if chrome is 'y' or chrome is 'Y':
     os.system("rm ~/Downloads/google-chrome-stable_current_amd64.deb")
     os.system("mv /usr/share/applications/google-chrome.desktop /usr/share/applications/google-chrome-stable.desktop")
 
-gimp = raw_input("Install GIMP image editor? [Y/n]? ")
+gimp = input("Install GIMP image editor? [Y/n]? ")
 if gimp is 'y' or gimp is 'Y':
     os.system("apt-get install -y gimp")
 
-libre = raw_input("Install LibreOffice Suite? [Y/n]? ")
+libre = input("Install LibreOffice Suite? [Y/n]? ")
 if libre is 'y' or libre is 'Y':
     os.system("apt-get install -y libreoffice")
 
-vlc = raw_input("Install VLC media player? [Y/n]? ")
+vlc = input("Install VLC media player? [Y/n]? ")
 if vlc is 'y' or vlc is 'Y':
     os.system("apt-get install -y vlc")
 
-bit = raw_input("Install qBittorrent? [Y/n]? ")
+bit = input("Install qBittorrent? [Y/n]? ")
 if bit is 'y' or bit is 'Y':
     os.system("apt-get install -y qbittorrent")
 
-glipper = raw_input("Install glipper clibboard manager? [Y/n]? ")
+glipper = input("Install glipper clibboard manager? [Y/n]? ")
 if glipper is 'y' or glipper is 'Y':
     os.system("apt-get install -y glipper")
 
-scroll = raw_input("Install OS X style natural scrolling? [Y/n]? ")
+scroll = input("Install OS X style natural scrolling? [Y/n]? ")
 if scroll is 'y' or scroll is 'Y':
     os.system("add-apt-repository -y ppa:zedtux/naturalscrolling")
     os.system("apt-get update -y")
@@ -192,12 +187,11 @@ if scroll is 'y' or scroll is 'Y':
     os.system(" ln -s /usr/share/applications/naturalscrolling.desktop /etc/xdg/autostart/")
 
 print("Checking for any updates")
-os.system("apt-get upgrade -y")
-os.system("apt-get dist-upgrade -y")
+os.system("apt-get upgrade -y ")
+os.system("apt-get dist-upgrade -y ")
 
 print("Removing leftovers")
 os.system("apt-get autoremove -y")
 
 # Restart the system
-raw_input("Your system will now reboot so that all changes can take effect. Thanks for using my script")
 os.system("reboot")
