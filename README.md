@@ -1,4 +1,8 @@
-This script is to help apply a large amount of hot fixes for elementary OS Luna 12.04 on the HP Chromebook 14. This script should work for many other Chromebooks, but I've only tested it on my HP 14. 
+There are two scripts here to help apply a large amount of hot fixes for elementary OS Luna and Frey on the HP Chromebook 14. This script should work for many other Chromebooks, but I've only tested it on my HP 14 for Luna.
+
+Script elementary12.py is for Luna
+
+Script elementary14.py is for Freya
 
 # Usage: #
 1. Install elementary OS Luna using Chrubuntu to partition the drive and then a live USB containing elementary OS Luna
