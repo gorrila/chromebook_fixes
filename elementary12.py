@@ -101,6 +101,10 @@ if guake is 'y' or guake is 'Y':
     os.system("apt-get install -y guake")
     os.system("ln -s /usr/share/applications/guake.desktop /etc/xdg/autostart/")
 
+git = raw_input("Install git? [Y/n] ")
+if git is 'y' or git is 'Y':
+    os.system("apt-get install -y git")
+
 numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
 if numix is 'y' or numix is 'Y':
     os.system("add-apt-repository -y ppa:numix/ppa")

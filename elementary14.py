@@ -149,6 +149,10 @@ else:
     if java is 'y' or java is 'Y':
         os.system("apt-get install -y openjdk-7-jdk")
 
+git = input("Install git? [Y/n] ")
+if git is 'y' or git is 'Y':
+    os.system("apt-get install -y git")
+
 battery = input("Install TLP Battery Saver? [Y/n]? ")
 if keys is 'y' or keys is 'Y':
     os.system("add-apt-repository -y ppa:linrunner/tlp")
