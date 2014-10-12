@@ -20,6 +20,31 @@ raw_input("Please connect to internet service before continuing. Hit Enter when 
 
 username = raw_input("Carefully enter your username: ")
 
+print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
+model = raw_input("")
+
+guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
+git = raw_input("Install git? [Y/n] ")
+numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
+wing = raw_input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
+keys = raw_input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
+battery = raw_input("Install TLP Battery Saver? [Y/n]? ")
+chrome = raw_input("Install Chrome browser? [Y/n]? ")
+gimp = raw_input("Install GIMP image editor? [Y/n]? ")
+libre = raw_input("Install LibreOffice Suite? [Y/n]? ")
+vlc = raw_input("Install VLC media player? [Y/n]? ")
+bit = raw_input("Install qBittorrent? [Y/n]? ")
+glipper = raw_input("Install glipper clibboard manager? [Y/n]? ")
+scroll = raw_input("Install OS X style natural scrolling? [Y/n]? ")
+java = raw_input("Install Oracle Java 7? [Y/n]? ")
+if java is 'y' or java is 'Y':
+    raw_input("Follow the on-screen instructions to finish the installation. It might take awhile, but is the last prompt from me")
+    os.system("add-apt-repository -y ppa:webupd8team/java")
+    os.system("apt-get update -y")
+    os.system("apt-get install -y python-software-properties oracle-java7-installer")
+if java is not 'y' and java is not 'Y':
+    openJ = raw_input("Install Open JDK 7? [Y/n]? ")
+
 print("Grabbing kernel 3.17 stable...may take a few moments")
 kernel = urllib.URLopener()
 # Check if system is 32 or 64-bit
@@ -102,23 +127,19 @@ for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inpl
 # Upgrade Xserver for better performance
 os.system("apt-get install -y xserver-xorg-lts-trusty")
 
-guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
 if guake is 'y' or guake is 'Y':
     os.system("apt-get install -y guake")
     os.system("ln -s /usr/share/applications/guake.desktop /etc/xdg/autostart/")
 
-git = raw_input("Install git? [Y/n] ")
 if git is 'y' or git is 'Y':
     os.system("apt-get install -y git")
 
-numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
 if numix is 'y' or numix is 'Y':
     os.system("add-apt-repository -y ppa:numix/ppa")
     os.system("add-apt-repository -y ppa:versable/elementary-update")
     os.system("apt-get update -y")
     os.system("apt-get install -y numix-gtk-theme numix-icon-theme-circle elementary-tweaks")
 
-wing = raw_input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
 if wing is 'y' or wing is 'Y':
     if numix is not 'y' and numix is not 'Y':
         os.system("add-apt-repository ppa:numix/ppa")
@@ -126,7 +147,6 @@ if wing is 'y' or wing is 'Y':
         os.system("apt-get update")
     os.system("apt-get install wingpanel-slim super-wingpanel")
 
-keys = raw_input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
 if keys is 'y' or keys is 'Y':
     os.system("apt-get install -y xbindkeys xdotool")
     # Map Super_L to the Search key
@@ -168,55 +188,39 @@ F10""")
     #Set Fullscreen toggle to be F4
     os.system("""gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F4']\"""")
 
-java = raw_input("Install Oracle Java 7? [Y/n]? ")
-if java is 'y' or java is 'Y':
-    print("Follow the on-screen instructions to finish the installation. It might take awhile")
-    os.system("add-apt-repository -y ppa:webupd8team/java")
-    os.system("apt-get update -y")
-    os.system("apt-get install -y python-software-properties oracle-java7-installer")
-else:
-    java = raw_input("Install Open JDK 7? [Y/n]? ")
-    if java is 'y' or java is 'Y':
-        os.system("apt-get install -y openjdk-7-jdk")
+if openJ is 'y' or openJ is 'Y':
+    os.system("apt-get install -y openjdk-7-jdk")
 
-battery = raw_input("Install TLP Battery Saver? [Y/n]? ")
 if keys is 'y' or keys is 'Y':
     os.system("add-apt-repository -y ppa:linrunner/tlp")
     os.system("apt-get update -y")
     os.system("apt-get install -y tlp tlp-rdw")
 
-chrome = raw_input("Install Chrome browser? [Y/n]? ")
 if chrome is 'y' or chrome is 'Y':
     print("Downloading Chrome. This may take a few moments...")
     if platform.architecture()[0] is "64bit":
         kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_amd64.deb")
     else:
-        kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_i386.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_amd64.deb")
+        kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_i386.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_i386.deb")
     os.system("dpkg -i ~/Downloads/*.deb")
     os.system("rm ~/Downloads/*.deb")
     os.system("mv /usr/share/applications/google-chrome.desktop /usr/share/applications/google-chrome-stable.desktop")
 
-gimp = raw_input("Install GIMP image editor? [Y/n]? ")
 if gimp is 'y' or gimp is 'Y':
     os.system("apt-get install -y gimp")
 
-libre = raw_input("Install LibreOffice Suite? [Y/n]? ")
 if libre is 'y' or libre is 'Y':
     os.system("apt-get install -y libreoffice")
 
-vlc = raw_input("Install VLC media player? [Y/n]? ")
 if vlc is 'y' or vlc is 'Y':
     os.system("apt-get install -y vlc")
 
-bit = raw_input("Install qBittorrent? [Y/n]? ")
 if bit is 'y' or bit is 'Y':
     os.system("apt-get install -y qbittorrent")
 
-glipper = raw_input("Install glipper clibboard manager? [Y/n]? ")
 if glipper is 'y' or glipper is 'Y':
     os.system("apt-get install -y glipper")
 
-scroll = raw_input("Install OS X style natural scrolling? [Y/n]? ")
 if scroll is 'y' or scroll is 'Y':
     os.system("add-apt-repository -y ppa:zedtux/naturalscrolling")
     os.system("apt-get update -y")

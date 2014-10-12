@@ -20,6 +20,9 @@ raw_input("Please connect to internet service before continuing. Hit Enter when 
 
 username = raw_input("Carefully enter your username: ")
 
+print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
+model = raw_input("")
+
 raw_input("You'll need to interact for the small portion where Java is installed and then should be able to leave and come back once it's finished. About 30 minutes or so depending on your internet connection...Enter")
 
 # Install Java
@@ -174,7 +177,7 @@ print("Downloading Chrome. This may take a few moments...")
 if platform.architecture()[0] is "64bit":
     kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_amd64.deb")
 else:
-    kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_i386.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_amd64.deb")
+    kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_i386.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_i386.deb")
 os.system("dpkg -i ~/Downloads/*.deb")
 os.system("rm ~/Downloads/*.deb")
 os.system("mv /usr/share/applications/google-chrome.desktop /usr/share/applications/google-chrome-stable.desktop")
