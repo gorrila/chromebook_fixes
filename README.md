@@ -17,7 +17,9 @@ This script is to help apply a large amount of hot fixes for elementary OS Luna 
 
 2. Set your themes and wingpanel settings in Elementary Tweaks from in the System Settings if you chose to install them
 
-3. Enjoy elementary OS Luna
+3. Delete your wired connection from Network Manager to avoid it trying to connect to it all the time
+
+4. Enjoy elementary OS Luna
 
 
 
