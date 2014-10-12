@@ -8,6 +8,7 @@ import urllib
 import os
 import fileinput
 import sys
+import platform
 
 print("Script made by Ian Richardson / iantrich.com, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
@@ -19,11 +20,19 @@ input("Please connect to internet service before continuing. Hit Enter when read
 
 username = input("Carefully enter your username: ")
 
+print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
+model = input("")
+
 print("Grabbing kernel 3.17 stable...may take a few moments")
 kernel = urllib.URLopener()
-kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
+# Check if system is 32 or 64-bit
+if platform.architecture()[0] is "64bit":
+    kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
+    kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
+else:
+    kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb")
+    kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb", "/home/" + username + "/Downloads/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb")
 kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb")
-kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
 
 print("Remove old kernel")
 os.system("""apt-get remove --purge $(dpkg -l 'linux-image-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d')""")
@@ -104,22 +113,23 @@ if guake is 'y' or guake is 'Y':
 numix = input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
 if numix is 'y' or numix is 'Y':
     os.system("add-apt-repository -y ppa:numix/ppa")
-    os.system("add-apt-repository -y ppa:versable/elementary-update")
+    os.system("add-apt-repository -y ppa:mpstark/elementary-tweaks-daily")
     os.system("apt-get update -y ")
-    os.system("apt-get install -y numix-gtx-theme numix-icon-theme-circle elementary-tweaks")
+    os.system("apt-get install -y numix-gtk-theme numix-icon-theme-circle elementary-tweaks")
 
 keys = input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
 if keys is 'y' or keys is 'Y':
     os.system("apt-get install -y xbindkeys xdotool")
     # Map Super_L to the Search key
     # Create .xmodmap
-    map = open("/home/" + username + "/.xmodmap", "w")
-    map.write("""#!/bin/bash
+    if model is "2":
+        map = open("/home/" + username + "/.xmodmap", "w")
+        map.write("""#!/bin/bash
 xmodmap -e "keycode 225 = Super_L";
 xmodmap -e “add mod4 = Super_L”;""")
-    map.close()
-    os.system("chmod +x ~/.xmodmap")
-    os.system("ln -s ~/.xmodmap /etc/xdg/autostart/")
+        map.close()
+        os.system("chmod +x ~/.xmodmap")
+        os.system("ln -s ~/.xmodmap /etc/xdg/autostart/")
 
     # Remap all remaining top row keys and Delete to Shift+Backspace
     # Create .xbindkeysrc
