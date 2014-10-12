@@ -9,17 +9,17 @@ import os
 import fileinput
 import sys
 
-print("Script made by Ian Richardson; iantrich.com for public use")
+print("Script made by Ian Richardson / iantrich.com, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
 cont = raw_input("Use at your own risk. Do you wish to continue? [Y/n] ")
 if cont is not 'y' and cont is not 'Y':
     exit()
 
-input("Please connect to internet service before continuing. Hit Enter when ready...")
+raw_input("Please connect to internet service before continuing. Hit Enter when ready...")
 
 username = raw_input("Carefully enter your username: ")
 
-#print("Grabbing kernel 3.17 stable...may take a few moments")
+print("Grabbing kernel 3.17 stable...may take a few moments")
 kernel = urllib.URLopener()
 kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
 kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb")
@@ -92,25 +92,26 @@ for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inpl
 
 guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
 if guake is 'y' or guake is 'Y':
-    os.system("apt-get install guake")
+    os.system("apt-get install -y guake")
 
 numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
 if numix is 'y' or numix is 'Y':
-    os.system("add-apt-repository ppa:numix/ppa")
-    os.system("add-apt-repository ppa:versable/elementary-update")
-    os.system("apt-get update")
-    os.system("apt-get install numix-gtx-theme numix-icon-theme-circle elementary-tweaks")
+    os.system("add-apt-repository -y ppa:numix/ppa")
+    os.system("add-apt-repository -y ppa:versable/elementary-update")
+    os.system("apt-get update -y")
+    os.system("apt-get install -y numix-gtx-theme numix-icon-theme-circle elementary-tweaks")
 
 wing = raw_input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
 if wing is 'y' or wing is 'Y':
-    os.system("add-apt-repository ppa:numix/ppa")
-    os.system("add-apt-repository ppa:versable/elementary-update")
-    os.system("apt-get update")
+    if numix is not 'y' and numix is not 'Y':
+        os.system("add-apt-repository ppa:numix/ppa")
+        os.system("add-apt-repository ppa:versable/elementary-update")
+        os.system("apt-get update")
     os.system("apt-get install wingpanel-slim super-wingpanel")
 
 keys = raw_input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
 if keys is 'y' or keys is 'Y':
-    os.system("apt-get install xbindkeys xdotool")
+    os.system("apt-get install -y xbindkeys xdotool")
     # Map Super_L to the Search key
     # Create .xmodmap
     map = open("/home/" + username + "/.xmodmap", "w")
@@ -141,19 +142,19 @@ shift+BackSpace""")
 java = raw_input("Install Oracle Java 7? [Y/n]? ")
 if java is 'y' or java is 'Y':
     print("Follow the on-screen instructions to finish the installation. It might take awhile")
-    os.system("add-apt-repository ppa:webupd8team/java")
-    os.system("apt-get update")
-    os.system("apt-get install python-software-properties oracle-java7-installer")
+    os.system("add-apt-repository -y ppa:webupd8team/java")
+    os.system("apt-get update -y")
+    os.system("apt-get install -y python-software-properties oracle-java7-installer")
 else:
     java = raw_input("Install Open JDK 7? [Y/n]? ")
     if java is 'y' or java is 'Y':
-        os.system("apt-get install openjdk-7-jdk")
+        os.system("apt-get install -y openjdk-7-jdk")
 
 battery = raw_input("Install TLP Battery Saver? [Y/n]? ")
 if keys is 'y' or keys is 'Y':
-    os.system("add-apt-repository ppa:linrunner/tlp")
-    os.system("apt-get update")
-    os.system("apt-get install tlp tlp-rdw")
+    os.system("add-apt-repository -y ppa:linrunner/tlp")
+    os.system("apt-get update -y")
+    os.system("apt-get install -y tlp tlp-rdw")
 
 chrome = raw_input("Install Chrome browser? [Y/n]? ")
 if chrome is 'y' or chrome is 'Y':
@@ -165,41 +166,41 @@ if chrome is 'y' or chrome is 'Y':
 
 gimp = raw_input("Install GIMP image editor? [Y/n]? ")
 if gimp is 'y' or gimp is 'Y':
-    os.system("apt-get install gimp")
+    os.system("apt-get install -y gimp")
 
 libre = raw_input("Install LibreOffice Suite? [Y/n]? ")
 if libre is 'y' or libre is 'Y':
-    os.system("apt-get install libreoffice")
+    os.system("apt-get install -y libreoffice")
 
 vlc = raw_input("Install VLC media player? [Y/n]? ")
 if vlc is 'y' or vlc is 'Y':
-    os.system("apt-get install vlc")
+    os.system("apt-get install -y vlc")
 
 bit = raw_input("Install qBittorrent? [Y/n]? ")
 if bit is 'y' or bit is 'Y':
-    os.system("apt-get install qbittorrent")
+    os.system("apt-get install -y qbittorrent")
 
 glipper = raw_input("Install glipper clibboard manager? [Y/n]? ")
 if glipper is 'y' or glipper is 'Y':
-    os.system("apt-get install glipper")
+    os.system("apt-get install -y glipper")
 
 scroll = raw_input("Install OS X style natural scrolling? [Y/n]? ")
 if scroll is 'y' or scroll is 'Y':
-    os.system("add-apt-repository ppa:zedtux/naturalscrolling")
-    os.system("apt-get update")
-    os.system("apt-get install naturalscrolling")
+    os.system("add-apt-repository -y ppa:zedtux/naturalscrolling")
+    os.system("apt-get update -y")
+    os.system("apt-get install -y naturalscrolling")
     os.system(" ln -s /usr/share/applications/naturalscrolling.desktop /etc/xdg/autostart/")
 
-input("Making partitions on USBs and SD Cards writable. You'll still need to change permissions in Properies. Hit Enter...")
+raw_input("Making partitions on USBs and SD Cards writable. You'll still need to change permissions in Properies. Hit Enter...")
 os.system("gksudo pantheon-files")
 
 print("Checking for any updates")
-os.system("apt-get upgrade")
-os.system("apt-get dist-upgrade")
+os.system("apt-get upgrade -y")
+os.system("apt-get dist-upgrade -y")
 
 print("Removing leftovers")
-os.system("apt-get autoremove")
+os.system("apt-get autoremove -y")
 
 # Restart the system
-input("Your system will now reboot so that all changes can take effect. Thanks for using my script")
+raw_input("Your system will now reboot so that all changes can take effect. Thanks for using my script")
 os.system("reboot")
