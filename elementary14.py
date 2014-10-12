@@ -99,6 +99,7 @@ if driver is 'y' or driver is 'Y':
 guake = input("Install Guake: A dropdown terminal? [Y/n]? ")
 if guake is 'y' or guake is 'Y':
     os.system("apt-get install -y guake")
+    os.system("ln -s /usr/share/applications/guake.desktop /etc/xdg/autostart/")
 
 numix = input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
 if numix is 'y' or numix is 'Y':

@@ -105,6 +105,7 @@ os.system("apt-get install -y xserver-xorg-lts-trusty")
 
 # Install Guake
 os.system("apt-get install -y guake")
+os.system("ln -s /usr/share/applications/guake.desktop /etc/xdg/autostart/")
 
 # Install numix, elementary tweaks and wingpanels
 os.system("add-apt-repository -y ppa:numix/ppa")

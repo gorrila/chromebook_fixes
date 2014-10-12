@@ -99,6 +99,7 @@ os.system("apt-get install -y xserver-xorg-lts-trusty")
 guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
 if guake is 'y' or guake is 'Y':
     os.system("apt-get install -y guake")
+    os.system("ln -s /usr/share/applications/guake.desktop /etc/xdg/autostart/")
 
 numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
 if numix is 'y' or numix is 'Y':
