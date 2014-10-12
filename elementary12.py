@@ -25,6 +25,9 @@ kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linu
 kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb")
 kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
 
+print("Remove old kernel")
+os.system("""apt-get remove --purge $(dpkg -l 'linux-image-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d')""")
+
 print("Extract packages to update the kernel")
 os.system("dpkg -i ~/Downloads/*.deb")
 os.system("rm ~/Downloads/*.deb")
@@ -88,7 +91,10 @@ for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inpl
         sys.stdout.write(line)
     else:
         sys.stdout.write(line)
-        section = True    
+        section = True
+
+# Upgrade Xserver for better performance
+os.system("apt-get install -y xserver-xorg-lts-trusty")
 
 guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
 if guake is 'y' or guake is 'Y':
