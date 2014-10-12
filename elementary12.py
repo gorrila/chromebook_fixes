@@ -99,7 +99,7 @@ if numix is 'y' or numix is 'Y':
     os.system("add-apt-repository -y ppa:numix/ppa")
     os.system("add-apt-repository -y ppa:versable/elementary-update")
     os.system("apt-get update -y")
-    os.system("apt-get install -y numix-gtx-theme numix-icon-theme-circle elementary-tweaks")
+    os.system("apt-get install -y numix-gtk-theme numix-icon-theme-circle elementary-tweaks")
 
 wing = raw_input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
 if wing is 'y' or wing is 'Y':

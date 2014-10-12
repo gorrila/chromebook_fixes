@@ -104,7 +104,7 @@ os.system("apt-get install -y guake")
 os.system("add-apt-repository -y ppa:numix/ppa")
 os.system("add-apt-repository -y ppa:versable/elementary-update")
 os.system("apt-get update -y")
-os.system("apt-get install -y numix-gtx-theme numix-icon-theme-circle elementary-tweaks")
+os.system("apt-get install -y numix-gtk-theme numix-icon-theme-circle elementary-tweaks")
 os.system("apt-get install wingpanel-slim super-wingpanel")
 
 # Remap keys
