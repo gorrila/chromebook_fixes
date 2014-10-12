@@ -7,7 +7,7 @@ Script elementary12_streamed.py is for Luna and eliminates most prompts and just
 Script elementary14.py is for Freya with prompts to select installed software
 
 # Usage: #
-1. Install elementary OS Luna using Chrubuntu to partition the drive and then a live USB containing elementary OS Luna
+1. Install elementary OS Luna/Freya using Chrubuntu to partition the drive and then a live USB containing elementary OS Luna/Freya
 
 2. Once installed, download the script and run the command from terminal: "sudo python ~/Downloads/elementary12.py"
 
@@ -19,15 +19,15 @@ Script elementary14.py is for Freya with prompts to select installed software
 
 # After the script has finished and your system has rebooted you can optionally do the following: #
 
-1. Assign a hotkey to Guake if you installed it using Guake Preferences as the default one won't work on Chromebooks
+1. Assign a hotkey to Guake if you installed it using Guake Preferences ($ guake -p) as the default one won't work on Chromebooks
 
-2. Set your themes and wingpanel settings in Elementary Tweaks from in the System Settings if you chose to install them
+2. (Luna) Set your themes and wingpanel settings in Elementary Tweaks from in the System Settings if you chose to install them
 
-3. Delete your wired connection from Network Manager to avoid it trying to connect to it all the time
+3. Delete your wired connection from Network Manager to avoid it trying to connect to it all the time. Hoping to add this to the script soon.
 
-4. Assign Fullscreen (F4) to Toggle Fullscreen in System Settings>Keyboard>Windows>Shortcuts
+4. Assign Fullscreen (F4) to Toggle Fullscreen in System Settings>Keyboard>Windows>Shortcuts (Luna doesn't have anything mapped to Toggle Fullscreen by default. Not sure about Luna but will look into finding the conf file for this and adding it to the script)
 
-5. Enjoy elementary OS Luna
+5. Enjoy elementary OS
 
 
 
@@ -51,6 +51,8 @@ Tweaks / Installations:
 
 * Install Guake Terminal
 
+* Install git
+
 * Install Numix theme, icons and elementary tweaks
 
 * Install Wingpanel-Super and Wingpanel-Slim (Luna)
@@ -65,7 +67,7 @@ Tweaks / Installations:
 
 * Remap Super key to Search key (Search+Space for Application Launcher)
 
-* Remap Left, Right, Refresh, Fullscreen and Display
+* Remap Left, Right, Refresh, Fullscreen, Display, Brightness and Volume Keys
 
 * Map Delete to Shift+Backspace
 
@@ -79,4 +81,4 @@ Tweaks / Installations:
 
 * Install Glipper Clipboard Manager
 
-* Install Natural Scrolling (OS X Style Scrolling) (Both but more applicable for Freya)
+* Install Natural Scrolling (OS X Style Scrolling) (Both, but more applicable for Freya as the ChromeOS touchpad driver disables touchpad settings in System Settings)
