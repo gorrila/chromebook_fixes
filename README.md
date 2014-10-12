@@ -36,24 +36,47 @@ Ian Richardson / iantrich.com
 
 
 Tweaks / Installations:
+
 * Upgrade kernel to stable 3.17
+
 * Fix suspend and boot times
+
 * Set power button to function as expected (Freya)
+
 * Touchpad tweaks (Luna: Increased sensitivity Freya: ChromeOS driver)
+
+* Upgrade Xserver for better performance (Luna)
+
 * Install Oracle JDK 7 or OpenJDK 7
+
 * Install Guake Terminal
+
 * Install Numix theme, icons and elementary tweaks
+
 * Install Wingpanel-Super and Wingpanel-Slim (Luna)
+
 * Install Build Essentials
+
 * Install Keymapping Tools
+
 * Install TLP Battery Saving Tool
+
 * Install Chrome browser and fix Plank icon issue
+
 * Remap Super key to Search key (Search+Space for Application Launcher)
+
 * Remap Left, Right, Refresh, Fullscreen and Display
+
 * Map Delete to Shift+Backspace
+
 * Install Gimp
+
 * Install Libreoffice
+
 * Install VLC
+
 * Install qBittorrent
+
 * Install Glipper Clipboard Manager
+
 * Install Natural Scrolling (OS X Style Scrolling) (Both but more applicable for Freya)
