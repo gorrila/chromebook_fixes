@@ -23,7 +23,9 @@ Script elementary14.py is for Freya
 
 3. Delete your wired connection from Network Manager to avoid it trying to connect to it all the time
 
-4. Enjoy elementary OS Luna
+4. Assign Display(F4) to Toggle Fullscreen in System Settings>Keyboard>Windows>Shortcuts
+
+5. Enjoy elementary OS Luna
 
 
 
