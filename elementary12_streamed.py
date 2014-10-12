@@ -155,6 +155,8 @@ F9
 "xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
 F10""")
 os.system("chmod +x ~/.xbindkeysrc")
+#Set Fullscreen toggle to be F4
+os.system("""gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F4']\"""")
 
 # Install tlp battery manager
 os.system("add-apt-repository -y ppa:linrunner/tlp")

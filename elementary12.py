@@ -159,6 +159,8 @@ F9
 "xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
 F10""")
     os.system("chmod +x ~/.xbindkeysrc")
+    #Set Fullscreen toggle to be F4
+    os.system("""gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F4']\"""")
 
 java = raw_input("Install Oracle Java 7? [Y/n]? ")
 if java is 'y' or java is 'Y':

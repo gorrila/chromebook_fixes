@@ -145,8 +145,20 @@ F3
 "xdotool keyup F4; xdotool key F11"
 F4
 "xdotool keyup shift+BackSpace; xdotool key Delete; xdotool keydown shift"
-shift+BackSpace""")
+shift+BackSpace
+"xdotool keyup F6; xdotool key XF86MonBrightnessDown"
+F6
+"xdotool keyup F7; xdotool key XF86MonBrightnessUp"
+F7
+"xdotool keyup F8; xdotool key XF86AudioMute"
+F8
+"xdotool keyup F9; xdotool key XF86AudioLowerVolume"
+F9
+"xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
+F10""")
     os.system("chmod +x ~/.xbindkeysrc")
+    #Set Fullscreen toggle to be F4
+    os.system("""gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F4']\"""")
 
 java = input("Install Oracle Java 7? [Y/n]? ")
 if java is 'y' or java is 'Y':
