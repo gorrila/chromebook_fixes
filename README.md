@@ -3,7 +3,7 @@ This script is to help apply a large amount of hot fixes for elementary OS Luna 
 # Usage: #
 1. Install elementary OS Luna using Chrubuntu to partition the drive and then a live USB containing elementary OS Luna
 
-2. Once installed, download the script and run the command: "sudo python ~/Downloads/elementary12.py"
+2. Once installed, download the script and run the command from terminal: "sudo python ~/Downloads/elementary12.py"
 
 3. Be sure to carefully type your username given during installation as this will be relied upon in the script
 
@@ -18,5 +18,7 @@ This script is to help apply a large amount of hot fixes for elementary OS Luna 
 2. Set your themes and wingpanel settings in Elementary Tweaks from in the System Settings if you chose to install them
 
 3. Enjoy elementary OS Luna
+
+
 
 Ian Richardson / iantrich.com
