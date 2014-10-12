@@ -184,9 +184,12 @@ if keys is 'y' or keys is 'Y':
 chrome = input("Install Chrome browser? [Y/n]? ")
 if chrome is 'y' or chrome is 'Y':
     print("Downloading Chrome. This may take a few moments...")
-    kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_amd64.deb")
-    os.system("dpkg -i ~/Downloads/google-chrome-stable_current_amd64.deb")
-    os.system("rm ~/Downloads/google-chrome-stable_current_amd64.deb")
+    if platform.architecture()[0] is "64bit":
+        kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_amd64.deb")
+    else:
+        kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_i386.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_amd64.deb")
+    os.system("dpkg -i ~/Downloads/*.deb")
+    os.system("rm ~/Downloads/*.deb")
     os.system("mv /usr/share/applications/google-chrome.desktop /usr/share/applications/google-chrome-stable.desktop")
 
 gimp = input("Install GIMP image editor? [Y/n]? ")
