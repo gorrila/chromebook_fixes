@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 __author__ = 'Ian Richardson'
 
@@ -18,33 +18,45 @@ if cont is not 'y' and cont is not 'Y':
 
 raw_input("Please connect to internet service before continuing. Hit Enter when ready...")
 
+print("1. elementary OS Luna\n2. elementary OS Freya")
+version = raw_input("Choose your version: ")
+
+print("1. Install software manually\n2. Install all default software (Guake, git, Numix themes, wingpanel, tlp, Chrome, gimp, LibreOffice, VLC, qBittorrent, glipper, Natural Scrolling (OS X Style), and Oracle JDK 7")
+manual = raw_input("Choose your method: ")
+
 username = raw_input("Carefully enter your username: ")
 
 print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
 model = raw_input("")
 
-driver = raw_input("Install ChromeOS touchpad driver? [Y/n]? ")
-guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
-git = raw_input("Install git? [Y/n] ")
-numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
-wing = raw_input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
-keys = raw_input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
-battery = raw_input("Install TLP Battery Saver? [Y/n]? ")
-chrome = raw_input("Install Chrome browser? [Y/n]? ")
-gimp = raw_input("Install GIMP image editor? [Y/n]? ")
-libre = raw_input("Install LibreOffice Suite? [Y/n]? ")
-vlc = raw_input("Install VLC media player? [Y/n]? ")
-bit = raw_input("Install qBittorrent? [Y/n]? ")
-glipper = raw_input("Install glipper clibboard manager? [Y/n]? ")
-scroll = raw_input("Install OS X style natural scrolling? [Y/n]? ")
-java = raw_input("Install Oracle Java 7? [Y/n]? ")
+if manual is '1':
+    if version is '2':
+        driver = raw_input("Install ChromeOS touchpad driver? [Y/n]? ")
+    guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
+    git = raw_input("Install git? [Y/n] ")
+    numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
+    if version is '1':
+        wing = raw_input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
+    keys = raw_input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
+    battery = raw_input("Install TLP Battery Saver? [Y/n]? ")
+    chrome = raw_input("Install Chrome browser? [Y/n]? ")
+    gimp = raw_input("Install GIMP image editor? [Y/n]? ")
+    libre = raw_input("Install LibreOffice Suite? [Y/n]? ")
+    vlc = raw_input("Install VLC media player? [Y/n]? ")
+    bit = raw_input("Install qBittorrent? [Y/n]? ")
+    glipper = raw_input("Install glipper clibboard manager? [Y/n]? ")
+    scroll = raw_input("Install OS X style natural scrolling? [Y/n]? ")
+    java = raw_input("Install Oracle Java 7? [Y/n]? ")
+    if java is not 'y' and java is not 'Y':
+        openJ = raw_input("Install Open JDK 7? [Y/n]? ")
+else:
+    guake = git = numix = driver = wing = keys = battery = chrome = gimp = libre = vlc = bit = glipper = scroll = java = 'y'
+
 if java is 'y' or java is 'Y':
-    raw_input("Follow the on-screen instructions to finish the installation. It might take awhile, but is the last prompt from me")
-    os.system("add-apt-repository -y ppa:webupd8team/java")
-    os.system("apt-get update -y")
-    os.system("apt-get install -y python-software-properties oracle-java7-installer")
-if java is not 'y' and java is not 'Y':
-    openJ = raw_input("Install Open JDK 7? [Y/n]? ")
+        raw_input("Follow the on-screen instructions to finish the Java installation. It might take awhile, but this is the last prompt from me")
+        os.system("add-apt-repository -y ppa:webupd8team/java")
+        os.system("apt-get update -y")
+        os.system("apt-get install -y python-software-properties oracle-java7-installer")
 
 print("Grabbing kernel 3.17 stable...may take a few moments")
 kernel = urllib.URLopener()
@@ -111,30 +123,56 @@ for line in fileinput.input("/etc/default/grub", inplace=True):
 os.system("update-grub")
 os.system("update-grub2")
 
-print("Adjust power button settings.")
+if version is '1':
+    # Upgrade Xserver for better performance
+    os.system("apt-get install -y xserver-xorg-lts-trusty")
 
-# Edit logind.conf
-for line in fileinput.input("/etc/systemd/logind.conf"):
-    if "Handlepowerkey" not in line:
-        sys.stdout.write(line)
-    else:
-        sys.stdout.write("Handlepowerkey=ignore")
+    # Adjust touchpad sensitivity
+    print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
+    section = False
+    for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+        if section:
+            sys.stdout.write("""      Option "FingerLow" "5"
+          Option "FingerHigh" "16\"\n""")
+            section = False
+        if "input/event*" not in line:
+            sys.stdout.write(line)
+        else:
+            sys.stdout.write(line)
+            section = True
 
-if driver is 'y' or driver is 'Y':
-    os.system("add-apt-repository -y ppa:hugegreenbug/cmt")
-    os.system("apt-get update -y")
-    os.system("apt-get install -y libevdevc libgestures  xf86-input-cmt")
-    os.system("mv /usr/share/X11/xorg.conf.d/50-synaptics.conf /usr/share/X11/xorg.conf.d/50-synaptics.conf.old")
-    os.system("cp /usr/share/xf86-input-cmt/50-touchpad-cmt-peppy.conf /usr/share/X11/xorg.conf.d/")
+    if numix is 'y' or numix is 'Y':
+        os.system("add-apt-repository -y ppa:numix/ppa")
+        os.system("add-apt-repository -y ppa:versable/elementary-update")
+        os.system("apt-get update -y")
+        os.system("apt-get install -y numix-gtk-theme numix-icon-theme-circle elementary-tweaks")
+
+    if wing is 'y' or wing is 'Y':
+        if numix is not 'y' and numix is not 'Y':
+            os.system("add-apt-repository ppa:numix/ppa")
+            os.system("add-apt-repository ppa:versable/elementary-update")
+            os.system("apt-get update")
+    os.system("apt-get install wingpanel-slim super-wingpanel")
+
+if version is '2':
+    if driver is 'y' or driver is 'Y':
+        os.system("add-apt-repository -y ppa:hugegreenbug/cmt")
+        os.system("apt-get update -y")
+        os.system("apt-get install -y libevdevc libgestures  xf86-input-cmt")
+        os.system("mv /usr/share/X11/xorg.conf.d/50-synaptics.conf /usr/share/X11/xorg.conf.d/50-synaptics.conf.old")
+        os.system("cp /usr/share/xf86-input-cmt/50-touchpad-cmt-peppy.conf /usr/share/X11/xorg.conf.d/")
 
 if guake is 'y' or guake is 'Y':
     os.system("apt-get install -y guake")
     os.system("ln -s /usr/share/applications/guake.desktop /etc/xdg/autostart/")
 
-if numix is 'y' or numix is 'Y':
+if git is 'y' or git is 'Y':
+    os.system("apt-get install -y git")
+
+if numix is 'y' or numix is 'Y' and version is '2':
     os.system("add-apt-repository -y ppa:numix/ppa")
     os.system("add-apt-repository -y ppa:mpstark/elementary-tweaks-daily")
-    os.system("apt-get update -y ")
+    os.system("apt-get update -y")
     os.system("apt-get install -y numix-gtk-theme numix-icon-theme-circle elementary-tweaks")
 
 if keys is 'y' or keys is 'Y':
@@ -182,9 +220,6 @@ F10""")
 if openJ is 'y' or openJ is 'Y':
     os.system("apt-get install -y openjdk-7-jdk")
 
-if git is 'y' or git is 'Y':
-    os.system("apt-get install -y git")
-
 if keys is 'y' or keys is 'Y':
     os.system("add-apt-repository -y ppa:linrunner/tlp")
     os.system("apt-get update -y")
@@ -221,13 +256,60 @@ if scroll is 'y' or scroll is 'Y':
     os.system("apt-get install -y naturalscrolling")
     os.system(" ln -s /usr/share/applications/naturalscrolling.desktop /etc/xdg/autostart/")
 
+print("Installing any remaining dependencies")
+os.system("apt-get install -f -y")
+
 print("Checking for any updates")
-os.system("apt-get upgrade -y ")
-os.system("apt-get dist-upgrade -y ")
+os.system("apt-get upgrade -y")
+os.system("apt-get dist-upgrade -y")
 
 print("Removing leftovers")
 os.system("apt-get autoremove -y")
 
+if version is '1':
+    # Create script to double check the touchpad config file
+    auto = open("/home/" + username + "/Downloads/auto.py", "w")
+    auto.write("""#!/usr/bin/env python
+    # -*- coding: utf-8 -*-
+    __author__ = 'Ian Richardson'
+
+    import fileinput
+    import sys
+
+    section = False
+    edited = False
+
+    for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+        if "FingerHigh" in line:
+            edited = True
+
+        sys.stdout.write(line)
+
+    if not edited:
+        for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+            if section:
+                sys.stdout.write(\"""      Option "FingerLow" "5"
+            Option "FingerHigh" "16"\\n""\")
+                section = False
+            if "input/event*" not in line:
+                sys.stdout.write(line)
+            else:
+                sys.stdout.write(line)
+                section = True""")
+    os.system("chmod +x /home/" + username + "/Downloads/auto.py")
+
+    # Create bash script that calls the python script with admin rights and deletes all scripts once complete
+    bash = open("/etc/init.d/auto", "w")
+    bash.write("""#! /bin/bash
+    sudo python /home/""" + username + """/Downloads/auto.py
+    sudo rm /home/""" + username + """/Downloads/auto.py
+    sudo rm /home/""" + username + """/Downloads/elementary12.py
+    sudo rm -- "$0"
+    sudo rm /etc/rc2.d/S99myscript
+    """)
+    os.system("chmod +x /etc/init.d/auto")
+    os.system("ln -s /etc/init.d/auto /etc/rc2.d/S99myscript")
+
 # Restart the system
-raw_input("Be sure to go to System Settings>Power>Power Button and change to 'Ask Me' after reboot. Hit Enter to reboot...")
+raw_input("Your system will now reboot so that all changes can take effect. Thanks for using my script and to all those who offered suggestions")
 os.system("reboot")
