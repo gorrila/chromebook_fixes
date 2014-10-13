@@ -1,21 +1,15 @@
-There are two scripts here to help apply a large amount of hot fixes for elementary OS Luna and Frey on the HP Chromebook 14. This script should work for many other Chromebooks, but I've only tested it on my HP 14 for Luna.
-
-Script elementary12.py is for Luna with prompts to select software to install.
-
-Script elementary12_streamed.py is for Luna and eliminates most prompts and just installs everything. See below for the full list of fixes and installations that it will do.
-
-Script elementary14.py is for Freya with prompts to select software to install.
+There are two scripts here to help apply a large amount of hot fixes for elementary OS Luna and Frey on the HP Chromebook 14. This script should work for many other Chromebooks, but I've only personally tested it on my HP 14 for Luna but am told that it works well on Freya for a C720 as well.
 
 # Usage: #
-1. Install elementary OS Luna/Freya using Chrubuntu to partition the drive and then a live USB containing elementary OS Luna/Freya.
+1. Install elementary OS Luna/Freya using Chrubuntu to partition the drive and a live USB containing elementary OS Luna/Freya.
 
-2. Once installed, download the script and run the command from terminal: "sudo python ~/Downloads/elementary12.py".
+2. Once installed, download the script and run the command from terminal: "sudo python ~/Downloads/elementary.py".
 
 3. Be sure to carefully type your username during installation as this will be relied upon in the script.
 
 4. Follow along with the script reading each prompt carefully.
 
-5. If the script fails or you accidentally stop it, I don't have any good remedies besides looking at one of my manual guides. DON'T RUN IT A 2ND TIME NO MATTER WHAT
+5. If the script fails or you accidentally stop it, I don't have any good remedies besides looking at one of my manual guides or reinstalling and starting over. DON'T RUN IT A 2ND TIME NO MATTER WHAT
 
 # After the script has finished and your system has rebooted you can optionally do the following: #
 
@@ -33,7 +27,9 @@ Script elementary14.py is for Freya with prompts to select software to install.
 
 
 
+
 Ian Richardson / iantrich.com
+
 
 
 
