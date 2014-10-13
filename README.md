@@ -1,31 +1,35 @@
 There are two scripts here to help apply a large amount of hot fixes for elementary OS Luna and Frey on the HP Chromebook 14. This script should work for many other Chromebooks, but I've only tested it on my HP 14 for Luna.
 
-Script elementary12.py is for Luna with prompts to select installed software
+Script elementary12.py is for Luna with prompts to select software to install.
 
-Script elementary12_streamed.py is for Luna and eliminates most prompts and just installs everything. See below for the full list of fixes and installations
+Script elementary12_streamed.py is for Luna and eliminates most prompts and just installs everything. See below for the full list of fixes and installations that it will do.
 
-Script elementary14.py is for Freya with prompts to select installed software
+Script elementary14.py is for Freya with prompts to select software to install.
 
 # Usage: #
-1. Install elementary OS Luna/Freya using Chrubuntu to partition the drive and then a live USB containing elementary OS Luna/Freya
+1. Install elementary OS Luna/Freya using Chrubuntu to partition the drive and then a live USB containing elementary OS Luna/Freya.
 
-2. Once installed, download the script and run the command from terminal: "sudo python ~/Downloads/elementary12.py"
+2. Once installed, download the script and run the command from terminal: "sudo python ~/Downloads/elementary12.py".
 
-3. Be sure to carefully type your username given during installation as this will be relied upon in the script
+3. Be sure to carefully type your username during installation as this will be relied upon in the script.
 
-4. Follow along with the script reading each prompt carefully
+4. Follow along with the script reading each prompt carefully.
 
 5. If the script fails or you accidentally stop it, I don't have any good remedies besides looking at one of my manual guides. DON'T RUN IT A 2ND TIME NO MATTER WHAT
 
 # After the script has finished and your system has rebooted you can optionally do the following: #
 
-1. Assign a hotkey to Guake if you installed it using Guake Preferences ($ guake -p) as the default one won't work on Chromebooks
+1. (Luna) Delete your wired connection from Network Manager to avoid it trying to connect to it all the time. Hoping to add this to the script soon.
 
-2. (Luna) Set your themes and wingpanel settings in Elementary Tweaks from in the System Settings if you chose to install them
+2. (Freya) Set the power button configuration. Open System Settings->Power and set Power Button to ”Ask Me”.
 
-3. Delete your wired connection from Network Manager to avoid it trying to connect to it all the time. Hoping to add this to the script soon.
+3. (Luna/Freya with Chrome) Open Chrome and in the address bar enter “chrome://flags” and enable “Override software rendering list”.
 
-4. Enjoy elementary OS
+4. (Luna/Freya) Set your themes and wingpanel (Luna Only) settings in Elementary Tweaks from in the System Settings if you chose to install them.
+
+5. (Luna/Freya with Guake) Assign a hotkey using Guake Preferences ($ guake -p) as the default one won't work on Chromebooks. (Note that there is a bug in Guake that hotkeys with Ctrl in them won't fire correctly)
+
+6. Enjoy elementary OS
 
 
 
