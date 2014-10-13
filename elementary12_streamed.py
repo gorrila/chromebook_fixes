@@ -95,6 +95,9 @@ for line in fileinput.input("/etc/default/grub", inplace=True):
 os.system("update-grub")
 os.system("update-grub2")
 
+# Upgrade Xserver for better performance
+os.system("apt-get install -y xserver-xorg-lts-trusty")
+
 # Adjust touchpad sensitivity
 print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
 section = False
@@ -108,9 +111,6 @@ for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inpl
     else:
         sys.stdout.write(line)
         section = True
-
-# Upgrade Xserver for better performance
-os.system("apt-get install -y xserver-xorg-lts-trusty")
 
 # Install Guake
 os.system("apt-get install -y guake")
@@ -210,48 +210,48 @@ os.system("apt-get dist-upgrade -y")
 print("Removing leftovers")
 os.system("apt-get autoremove -y")
 
-# Create script to double check the touchpad config file
-auto = open("/home/" + username + "/Downloads/auto.py", "w")
-auto.write("""#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-__author__ = 'Ian Richardson'
-
-import fileinput
-import sys
-
-section = False
-edited = False
-
-for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
-    if "FingerHigh" in line:
-        edited = True
-
-    sys.stdout.write(line)
-
-if not edited:
-    for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
-        if section:
-            sys.stdout.write(\"""      Option "FingerLow" "5"
-        Option "FingerHigh" "16"\\n""\")
-            section = False
-        if "input/event*" not in line:
-            sys.stdout.write(line)
-        else:
-            sys.stdout.write(line)
-            section = True""")
-os.system("chmod +x /home/" + username + "/Downloads/auto.py")
-
-# Create bash script that calls the python script with admin rights and deletes all scripts once complete
-bash = open("/etc/init.d/auto", "w")
-bash.write("""#! /bin/bash
-sudo python /home/""" + username + """/Downloads/auto.py
-sudo rm /home/""" + username + """/Downloads/auto.py
-sudo rm /home/""" + username + """/Downloads/elementary12.py
-sudo rm -- "$0"
-sudo rm /etc/rc2.d/S99myscript
-""")
-os.system("chmod +x /etc/init.d/auto")
-os.system("ln -s /etc/init.d/auto /etc/rc2.d/S99myscript")
+# # Create script to double check the touchpad config file
+# auto = open("/home/" + username + "/Downloads/auto.py", "w")
+# auto.write("""#!/usr/bin/env python
+# # -*- coding: utf-8 -*-
+# __author__ = 'Ian Richardson'
+#
+# import fileinput
+# import sys
+#
+# section = False
+# edited = False
+#
+# for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+#     if "FingerHigh" in line:
+#         edited = True
+#
+#     sys.stdout.write(line)
+#
+# if not edited:
+#     for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+#         if section:
+#             sys.stdout.write(\"""      Option "FingerLow" "5"
+#         Option "FingerHigh" "16"\\n""\")
+#             section = False
+#         if "input/event*" not in line:
+#             sys.stdout.write(line)
+#         else:
+#             sys.stdout.write(line)
+#             section = True""")
+# os.system("chmod +x /home/" + username + "/Downloads/auto.py")
+#
+# # Create bash script that calls the python script with admin rights and deletes all scripts once complete
+# bash = open("/etc/init.d/auto", "w")
+# bash.write("""#! /bin/bash
+# sudo python /home/""" + username + """/Downloads/auto.py
+# sudo rm /home/""" + username + """/Downloads/auto.py
+# sudo rm /home/""" + username + """/Downloads/elementary12.py
+# sudo rm -- "$0"
+# sudo rm /etc/rc2.d/S99myscript
+# """)
+# os.system("chmod +x /etc/init.d/auto")
+# os.system("ln -s /etc/init.d/auto /etc/rc2.d/S99myscript")
 
 # Restart the system
 raw_input("Hit Enter to Reboot")
