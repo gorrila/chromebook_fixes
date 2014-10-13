@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 __author__ = 'Ian Richardson'
 
@@ -12,39 +12,39 @@ import platform
 
 print("Script made by Ian Richardson / iantrich.com, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
-cont = input("Use at your own risk. Do you wish to continue? [Y/n] ")
+cont = raw_input("Use at your own risk. Do you wish to continue? [Y/n] ")
 if cont is not 'y' and cont is not 'Y':
     exit()
 
-input("Please connect to internet service before continuing. Hit Enter when ready...")
+raw_input("Please connect to internet service before continuing. Hit Enter when ready...")
 
-username = input("Carefully enter your username: ")
+username = raw_input("Carefully enter your username: ")
 
 print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
-model = input("")
+model = raw_input("")
 
-driver = input("Install ChromeOS touchpad driver? [Y/n]? ")
-guake = input("Install Guake: A dropdown terminal? [Y/n]? ")
-git = input("Install git? [Y/n] ")
-numix = input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
-wing = input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
-keys = input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
-battery = input("Install TLP Battery Saver? [Y/n]? ")
-chrome = input("Install Chrome browser? [Y/n]? ")
-gimp = input("Install GIMP image editor? [Y/n]? ")
-libre = input("Install LibreOffice Suite? [Y/n]? ")
-vlc = input("Install VLC media player? [Y/n]? ")
-bit = input("Install qBittorrent? [Y/n]? ")
-glipper = input("Install glipper clibboard manager? [Y/n]? ")
-scroll = input("Install OS X style natural scrolling? [Y/n]? ")
-java = input("Install Oracle Java 7? [Y/n]? ")
+driver = raw_input("Install ChromeOS touchpad driver? [Y/n]? ")
+guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
+git = raw_input("Install git? [Y/n] ")
+numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
+wing = raw_input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
+keys = raw_input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
+battery = raw_input("Install TLP Battery Saver? [Y/n]? ")
+chrome = raw_input("Install Chrome browser? [Y/n]? ")
+gimp = raw_input("Install GIMP image editor? [Y/n]? ")
+libre = raw_input("Install LibreOffice Suite? [Y/n]? ")
+vlc = raw_input("Install VLC media player? [Y/n]? ")
+bit = raw_input("Install qBittorrent? [Y/n]? ")
+glipper = raw_input("Install glipper clibboard manager? [Y/n]? ")
+scroll = raw_input("Install OS X style natural scrolling? [Y/n]? ")
+java = raw_input("Install Oracle Java 7? [Y/n]? ")
 if java is 'y' or java is 'Y':
-    input("Follow the on-screen instructions to finish the installation. It might take awhile, but is the last prompt from me")
+    raw_input("Follow the on-screen instructions to finish the installation. It might take awhile, but is the last prompt from me")
     os.system("add-apt-repository -y ppa:webupd8team/java")
     os.system("apt-get update -y")
     os.system("apt-get install -y python-software-properties oracle-java7-installer")
 if java is not 'y' and java is not 'Y':
-    openJ = input("Install Open JDK 7? [Y/n]? ")
+    openJ = raw_input("Install Open JDK 7? [Y/n]? ")
 
 print("Grabbing kernel 3.17 stable...may take a few moments")
 kernel = urllib.URLopener()
@@ -229,5 +229,5 @@ print("Removing leftovers")
 os.system("apt-get autoremove -y")
 
 # Restart the system
-input("Be sure to go to System Settings>Power>Power Button and change to 'Ask Me' after reboot. Hit Enter to reboot...")
+raw_input("Be sure to go to System Settings>Power>Power Button and change to 'Ask Me' after reboot. Hit Enter to reboot...")
 os.system("reboot")
