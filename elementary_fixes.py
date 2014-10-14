@@ -9,6 +9,7 @@ import os
 import fileinput
 import sys
 import platform
+import subprocess
 
 print("Script made by Ian Richardson / github.com/iantrich/, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
@@ -66,27 +67,27 @@ if java is 'y' or java is 'Y':
         os.system("apt-get update -y")
         os.system("apt-get install -y python-software-properties oracle-java7-installer")
 
-print("Grabbing kernel 3.17 stable...may take a few moments")
-kernel = urllib.URLopener()
-# Check if system is 32 or 64-bit
-if platform.architecture()[0] is "64bit":
-    kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
-    kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
-else:
-    kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb")
-    kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb", "/home/" + username + "/Downloads/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb")
-kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb")
+print("Check current kernel version")
+if '3.17.0-031700-generic' not in subprocess.Popen(["uname", "-r"], stdout=subprocess.PIPE).communicate()[0]:
+    print("Grabbing kernel 3.17 stable...may take a few moments")
+    kernel = urllib.URLopener()
+    # Check if system is 32 or 64-bit
+    if platform.architecture()[0] is "64bit":
+        kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
+        kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
+    else:
+        kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb")
+        kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb", "/home/" + username + "/Downloads/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_i386.deb")
+    kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb")
 
-print("Remove old kernel")
-os.system("""apt-get remove --purge $(dpkg -l 'linux-image-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d')""")
+    print("Remove old kernel")
+    os.system("""apt-get remove --purge $(dpkg -l 'linux-image-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d')""")
 
-print("Extract packages to update the kernel")
-os.system("dpkg -i ~/Downloads/*.deb")
-os.system("rm ~/Downloads/*.deb")
+    print("Extract packages to update the kernel")
+    os.system("dpkg -i ~/Downloads/*.deb")
+    os.system("rm ~/Downloads/*.deb")
 
-print("Fix suspend and boot times")
-sound = open("/etc/pm/sleep.d/05_Sound", "w")
-sound.write("""#!/bin/sh
+if """#!/bin/sh
 # File: "/etc/pm/sleep.d/05_Sound".
 case "${1}" in
 hibernate|suspend)
@@ -103,16 +104,31 @@ echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/bind
 echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
 echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
 ;;
-esac""")
-sound.close()
+esac""" not in open("/etc/pm/sleep.d/05_Sound").read():
+    print("Fix suspend and boot times")
+    sound = open("/etc/pm/sleep.d/05_Sound", "w")
+    sound.write("""#!/bin/sh
+    # File: "/etc/pm/sleep.d/05_Sound".
+    case "${1}" in
+    hibernate|suspend)
+    # Unbind ehci for preventing error
+    echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/unbind
+    # Unbind snd_hda_intel for sound
+    echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/unbind
+    echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/unbind
+    ;;
+    resume|thaw)
+    # Bind ehci for preventing error
+    echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/bind
+    # Bind snd_hda_intel for sound
+    echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
+    echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
+    ;;
+    esac""")
+    sound.close()
 os.system("chmod +x /etc/pm/sleep.d/05_Sound")
 
-# Edit rc.local
-for line in fileinput.input("/etc/rc.local", inplace=True):
-    if "By default" not in line:
-        sys.stdout.write(line)
-    else:
-        sys.stdout.write("""echo EHCI > /proc/acpi/wakeup
+if """echo EHCI > /proc/acpi/wakeup
 echo HDEF > /proc/acpi/wakeup
 echo XHCI > /proc/acpi/wakeup
 echo LID0 > /proc/acpi/wakeup
@@ -120,19 +136,50 @@ echo TPAD > /proc/acpi/wakeup
 echo TSCR > /proc/acpi/wakeup
 echo 300 > /sys/class/backlight/intel_backlight/brightness
 rfkill block bluetooth
-/etc/init.d/bluetooth stop""")
+/etc/init.d/bluetooth stop""" not in open("/etc/rc.local").read();
+    # Edit rc.local
+    for line in fileinput.input("/etc/rc.local", inplace=True):
+        if "By default" not in line:
+            sys.stdout.write(line)
+        else:
+            sys.stdout.write("""echo EHCI > /proc/acpi/wakeup
+    echo HDEF > /proc/acpi/wakeup
+    echo XHCI > /proc/acpi/wakeup
+    echo LID0 > /proc/acpi/wakeup
+    echo TPAD > /proc/acpi/wakeup
+    echo TSCR > /proc/acpi/wakeup
+    echo 300 > /sys/class/backlight/intel_backlight/brightness
+    rfkill block bluetooth
+    /etc/init.d/bluetooth stop""")
 
-# Edit grub and update
-for line in fileinput.input("/etc/default/grub", inplace=True):
-    if "GRUB_CMDLINE_LINUX_DEFAULT" not in line:
-        sys.stdout.write(line)
-    else:
-        sys.stdout.write("""GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresume noswap i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic\"""")
-os.system("update-grub")
-os.system("update-grub2")
+if """GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresume noswap i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic\"""" not in open("/etc/default/grub").read():
+    # Edit grub and update
+    for line in fileinput.input("/etc/default/grub", inplace=True):
+        if "GRUB_CMDLINE_LINUX_DEFAULT" not in line:
+            sys.stdout.write(line)
+        else:
+            sys.stdout.write("""GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresume noswap i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic\"""")
+    os.system("update-grub")
+    os.system("update-grub2")
 
 if version is 'luna' or '12.04':
-    # Upgrade Xserver for better performance
+    if "FingerLow" "5" not in open("/usr/share/X11/xorg.conf.d/50-synaptics.conf").read():
+        # Adjust touchpad sensitivity
+        print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
+        section = False
+        for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+            if section:
+                sys.stdout.write("""      Option "FingerLow" "5"
+              Option "FingerHigh" "16\"\n""")
+                section = False
+            if "input/event*" not in line:
+                sys.stdout.write(line)
+            else:
+                sys.stdout.write(line)
+                section = True
+
+
+    print("Upgrade Xserver for better performance")
     os.system("apt-get install -y xserver-xorg-lts-trusty")
 
 if version is 'luna':
@@ -151,25 +198,27 @@ if version is 'luna':
 
 if version is 'freya' or '14.04':
     if driver is 'y' or driver is 'Y':
-        os.system("add-apt-repository -y ppa:hugegreenbug/cmt")
-        os.system("apt-get update -y")
-        os.system("apt-get install -y libevdevc libgestures  xf86-input-cmt")
-        os.system("mv /usr/share/X11/xorg.conf.d/50-synaptics.conf /usr/share/X11/xorg.conf.d/50-synaptics.conf.old")
-        os.system("cp /usr/share/xf86-input-cmt/50-touchpad-cmt-peppy.conf /usr/share/X11/xorg.conf.d/")
+        if not subprocess.Popen(["[ -f /usr/share/X11/xorg.conf.d/50-touchpad-cmt-peppy.conf]", ""], stdout=subprocess.PIPE).communicate()[0]:
+            os.system("add-apt-repository -y ppa:hugegreenbug/cmt")
+            os.system("apt-get update -y")
+            os.system("apt-get install -y libevdevc libgestures  xf86-input-cmt")
+            os.system("mv /usr/share/X11/xorg.conf.d/50-synaptics.conf /usr/share/X11/xorg.conf.d/50-synaptics.conf.old")
+            os.system("cp /usr/share/xf86-input-cmt/50-touchpad-cmt-peppy.conf /usr/share/X11/xorg.conf.d/")
     else:
-        # Adjust touchpad sensitivity
-        print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
-        section = False
-        for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
-            if section:
-                sys.stdout.write("""      Option "FingerLow" "5"
-              Option "FingerHigh" "16\"\n""")
-                section = False
-            if "input/event*" not in line:
-                sys.stdout.write(line)
-            else:
-                sys.stdout.write(line)
-                section = True
+        if "FingerLow" "5" not in open("/usr/share/X11/xorg.conf.d/50-synaptics.conf").read():
+            # Adjust touchpad sensitivity
+            print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
+            section = False
+            for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+                if section:
+                    sys.stdout.write("""      Option "FingerLow" "5"
+                  Option "FingerHigh" "16\"\n""")
+                    section = False
+                if "input/event*" not in line:
+                    sys.stdout.write(line)
+                else:
+                    sys.stdout.write(line)
+                    section = True
 
     if numix is 'y' or numix is 'Y':
         os.system("add-apt-repository -y ppa:numix/ppa")
@@ -185,22 +234,24 @@ if git is 'y' or git is 'Y':
     os.system("apt-get install -y git")
 
 if keys is 'y' or keys is 'Y':
-    os.system("apt-get install -y xbindkeys xdotool")
-    # Map Super_L to the Search key
-    # Create .xmodmap
-    if model is "2":
-        map = open("/home/" + username + "/.xmodmap", "w")
-        map.write("""#!/bin/bash
+    if """#!/bin/bash
 xmodmap -e "keycode 225 = Super_L";
-xmodmap -e “add mod4 = Super_L”;""")
-        map.close()
-        os.system("chmod +x ~/.xmodmap")
-        os.system("ln -s ~/.xmodmap /etc/xdg/autostart/")
+xmodmap -e “add mod4 = Super_L”;""" not in open("/home/" + username + "/.xmodmap").read():
+        os.system("apt-get install -y xbindkeys xdotool")
+        # Map Super_L to the Search key
+        # Create .xmodmap
+        if model is "2":
+            map = open("/home/" + username + "/.xmodmap", "w")
+            map.write("""#!/bin/bash
+    xmodmap -e "keycode 225 = Super_L";
+    xmodmap -e “add mod4 = Super_L”;""")
+            map.close()
+            os.system("chmod +x ~/.xmodmap")
+            os.system("ln -s ~/.xmodmap /etc/xdg/autostart/")
 
     # Remap all remaining top row keys and Delete to Shift+Backspace
     # Create .xbindkeysrc
-    xbind = open("/home/" + username + "/.xbindkeysrc", "w")
-    xbind.write(""""xdotool keyup F1; xdotool key alt+Left"
+    if """"xdotool keyup F1; xdotool key alt+Left"
 F1
 "xdotool keyup F2; xdotool key alt+Right"
 F2
@@ -221,8 +272,32 @@ F8
 "xdotool keyup F9; xdotool key XF86AudioLowerVolume"
 F9
 "xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
-F10""")
-    os.system("chmod +x ~/.xbindkeysrc")
+F10""" not in open("/home/" + username + "/.xbindkeysrc").read():
+        xbind = open("/home/" + username + "/.xbindkeysrc", "w")
+        xbind.write(""""xdotool keyup F1; xdotool key alt+Left"
+    F1
+    "xdotool keyup F2; xdotool key alt+Right"
+    F2
+    "xdotool keyup F5; xdotool key super+a"
+    F5
+    "xdotool keyup F3; xdotool key ctrl+r"
+    F3
+    "xdotool keyup F4; xdotool key F11"
+    F4
+    "xdotool keyup shift+BackSpace; xdotool key Delete; xdotool keydown shift"
+    shift+BackSpace
+    "xdotool keyup F6; xdotool key XF86MonBrightnessDown"
+    F6
+    "xdotool keyup F7; xdotool key XF86MonBrightnessUp"
+    F7
+    "xdotool keyup F8; xdotool key XF86AudioMute"
+    F8
+    "xdotool keyup F9; xdotool key XF86AudioLowerVolume"
+    F9
+    "xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
+    F10""")
+        os.system("chmod +x ~/.xbindkeysrc")
+        
     #Set Fullscreen toggle to be F4
     os.system("""gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F4']\"""")
 
