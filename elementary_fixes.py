@@ -136,7 +136,7 @@ echo TPAD > /proc/acpi/wakeup
 echo TSCR > /proc/acpi/wakeup
 echo 300 > /sys/class/backlight/intel_backlight/brightness
 rfkill block bluetooth
-/etc/init.d/bluetooth stop""" not in open("/etc/rc.local").read();
+/etc/init.d/bluetooth stop""" not in open("/etc/rc.local").read():
     # Edit rc.local
     for line in fileinput.input("/etc/rc.local", inplace=True):
         if "By default" not in line:
@@ -297,7 +297,7 @@ F10""" not in open("/home/" + username + "/.xbindkeysrc").read():
     "xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
     F10""")
         os.system("chmod +x ~/.xbindkeysrc")
-        
+
     #Set Fullscreen toggle to be F4
     os.system("""gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F4']\"""")
 
