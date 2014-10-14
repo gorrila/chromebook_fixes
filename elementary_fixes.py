@@ -10,7 +10,7 @@ import fileinput
 import sys
 import platform
 
-print("Script made by Ian Richardson / iantrich.com, for public use")
+print("Script made by Ian Richardson / github.com/iantrich/, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
 cont = raw_input("Use at your own risk. Do you wish to continue? [Y/n] ")
 if cont is not 'y' and cont is not 'Y':
@@ -18,8 +18,16 @@ if cont is not 'y' and cont is not 'Y':
 
 raw_input("Please connect to internet service before continuing. Hit Enter when ready...")
 
-print("1. elementary OS Luna\n2. elementary OS Freya")
-version = raw_input("Choose your version: ")
+if 'Luna' in open("/etc/os-release").read():
+    version = 1
+elif 'Freya' in open("/etc/os-release").read():
+    version = 'freya'
+elif 'Freya' in open("/etc/os-release").read():
+    version = '12.04'
+elif 'Freya' in open("/etc/os-release").read():
+    version = '14.04'
+else:
+    version = 'other'
 
 print("1. Install software manually\n2. Install all default software (Guake, git, Numix themes, wingpanel, tlp, Chrome, gimp, LibreOffice, VLC, qBittorrent, glipper, Natural Scrolling (OS X Style), and Oracle JDK 7")
 manual = raw_input("Choose your method: ")
@@ -30,12 +38,12 @@ print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
 model = raw_input("")
 
 if manual is '1':
-    if version is '2':
+    if version is 'freya' or version is '12.04':
         driver = raw_input("Install ChromeOS touchpad driver? [Y/n]? ")
     guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
     git = raw_input("Install git? [Y/n] ")
     numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
-    if version is '1':
+    if version is 'luna':
         wing = raw_input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
     keys = raw_input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
     battery = raw_input("Install TLP Battery Saver? [Y/n]? ")
@@ -123,24 +131,11 @@ for line in fileinput.input("/etc/default/grub", inplace=True):
 os.system("update-grub")
 os.system("update-grub2")
 
-if version is '1':
+if version is 'luna' or '12.04':
     # Upgrade Xserver for better performance
     os.system("apt-get install -y xserver-xorg-lts-trusty")
 
-    # Adjust touchpad sensitivity
-    print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
-    section = False
-    for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
-        if section:
-            sys.stdout.write("""      Option "FingerLow" "5"
-          Option "FingerHigh" "16\"\n""")
-            section = False
-        if "input/event*" not in line:
-            sys.stdout.write(line)
-        else:
-            sys.stdout.write(line)
-            section = True
-
+if version is 'luna':
     if numix is 'y' or numix is 'Y':
         os.system("add-apt-repository -y ppa:numix/ppa")
         os.system("add-apt-repository -y ppa:versable/elementary-update")
@@ -154,13 +149,33 @@ if version is '1':
             os.system("apt-get update")
     os.system("apt-get install wingpanel-slim super-wingpanel")
 
-if version is '2':
+if version is 'freya' or '14.04':
     if driver is 'y' or driver is 'Y':
         os.system("add-apt-repository -y ppa:hugegreenbug/cmt")
         os.system("apt-get update -y")
         os.system("apt-get install -y libevdevc libgestures  xf86-input-cmt")
         os.system("mv /usr/share/X11/xorg.conf.d/50-synaptics.conf /usr/share/X11/xorg.conf.d/50-synaptics.conf.old")
         os.system("cp /usr/share/xf86-input-cmt/50-touchpad-cmt-peppy.conf /usr/share/X11/xorg.conf.d/")
+    else:
+        # Adjust touchpad sensitivity
+        print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
+        section = False
+        for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+            if section:
+                sys.stdout.write("""      Option "FingerLow" "5"
+              Option "FingerHigh" "16\"\n""")
+                section = False
+            if "input/event*" not in line:
+                sys.stdout.write(line)
+            else:
+                sys.stdout.write(line)
+                section = True
+
+    if numix is 'y' or numix is 'Y':
+        os.system("add-apt-repository -y ppa:numix/ppa")
+        os.system("add-apt-repository -y ppa:mpstark/elementary-tweaks-daily")
+        os.system("apt-get update -y")
+        os.system("apt-get install -y numix-gtk-theme numix-icon-theme-circle elementary-tweaks")
 
 if guake is 'y' or guake is 'Y':
     os.system("apt-get install -y guake")
@@ -168,12 +183,6 @@ if guake is 'y' or guake is 'Y':
 
 if git is 'y' or git is 'Y':
     os.system("apt-get install -y git")
-
-if numix is 'y' or numix is 'Y' and version is '2':
-    os.system("add-apt-repository -y ppa:numix/ppa")
-    os.system("add-apt-repository -y ppa:mpstark/elementary-tweaks-daily")
-    os.system("apt-get update -y")
-    os.system("apt-get install -y numix-gtk-theme numix-icon-theme-circle elementary-tweaks")
 
 if keys is 'y' or keys is 'Y':
     os.system("apt-get install -y xbindkeys xdotool")
@@ -266,49 +275,49 @@ os.system("apt-get dist-upgrade -y")
 print("Removing leftovers")
 os.system("apt-get autoremove -y")
 
-if version is '1':
-    # Create script to double check the touchpad config file
-    auto = open("/home/" + username + "/Downloads/auto.py", "w")
-    auto.write("""#!/usr/bin/env python
-    # -*- coding: utf-8 -*-
-    __author__ = 'Ian Richardson'
-
-    import fileinput
-    import sys
-
-    section = False
-    edited = False
-
-    for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
-        if "FingerHigh" in line:
-            edited = True
-
-        sys.stdout.write(line)
-
-    if not edited:
-        for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
-            if section:
-                sys.stdout.write(\"""      Option "FingerLow" "5"
-            Option "FingerHigh" "16"\\n""\")
-                section = False
-            if "input/event*" not in line:
-                sys.stdout.write(line)
-            else:
-                sys.stdout.write(line)
-                section = True""")
-    os.system("chmod +x /home/" + username + "/Downloads/auto.py")
-
-    # Create bash script that calls the python script with admin rights and deletes all scripts once complete
-    bash = open("/etc/init.d/auto", "w")
-    bash.write("""#! /bin/bash
-    sudo python /home/""" + username + """/Downloads/auto.py
-    sudo rm /home/""" + username + """/Downloads/auto.py
-    sudo rm /home/""" + username + """/Downloads/elementary12.py
-    sudo rm -- "$0"
-    sudo rm /etc/rc2.d/S99myscript
-    """)
-    os.system("chmod +x /etc/init.d/auto")
-    os.system("ln -s /etc/init.d/auto /etc/rc2.d/S99myscript")
+# if version is 'luna' or '12.04':
+#     # Create script to double check the touchpad config file
+#     auto = open("/home/" + username + "/Downloads/auto.py", "w")
+#     auto.write("""#!/usr/bin/env python
+#     # -*- coding: utf-8 -*-
+#     __author__ = 'Ian Richardson'
+#
+#     import fileinput
+#     import sys
+#
+#     section = False
+#     edited = False
+#
+#     for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+#         if "FingerHigh" in line:
+#             edited = True
+#
+#         sys.stdout.write(line)
+#
+#     if not edited:
+#         for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+#             if section:
+#                 sys.stdout.write(\"""      Option "FingerLow" "5"
+#             Option "FingerHigh" "16"\\n""\")
+#                 section = False
+#             if "input/event*" not in line:
+#                 sys.stdout.write(line)
+#             else:
+#                 sys.stdout.write(line)
+#                 section = True""")
+#     os.system("chmod +x /home/" + username + "/Downloads/auto.py")
+#
+#     # Create bash script that calls the python script with admin rights and deletes all scripts once complete
+#     bash = open("/etc/init.d/auto", "w")
+#     bash.write("""#! /bin/bash
+#     sudo python /home/""" + username + """/Downloads/auto.py
+#     sudo rm /home/""" + username + """/Downloads/auto.py
+#     sudo rm /home/""" + username + """/Downloads/elementary12.py
+#     sudo rm -- "$0"
+#     sudo rm /etc/rc2.d/S99myscript
+#     """)
+#     os.system("chmod +x /etc/init.d/auto")
+#     os.system("ln -s /etc/init.d/auto /etc/rc2.d/S99myscript")
 
 # Restart the system
 raw_input("Your system will now reboot so that all changes can take effect. Thanks for using my script and to all those who offered suggestions")
