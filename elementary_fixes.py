@@ -95,7 +95,7 @@ def checkFiles(username):
     return files;
 
 def checkRepos():
-    repos = subprocess.Popen(["find /etc/apt/", "-name *.list | xargs cat | grep  ^[[:space:]]*deb"], stdout=subprocess.PIPE).communicate()
+    # repos = subprocess.Popen(["find /etc/apt/", "-name *.list | xargs cat | grep  ^[[:space:]]*deb"], stdout=subprocess.PIPE).communicate()
     installedRepos = {};
 
     return installedRepos;
