@@ -18,36 +18,39 @@ def checkFiles(username):
     if '3.17.0-031700-generic' in subprocess.Popen(["uname", "-r"], stdout=subprocess.PIPE).communicate()[0]:
         files.update({'kernel':True})
 
-    if """#!/bin/sh
-# File: "/etc/pm/sleep.d/05_Sound".
-case "${1}" in
-hibernate|suspend)
-# Unbind ehci for preventing error
-echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/unbind
-# Unbind snd_hda_intel for sound
-echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/unbind
-echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/unbind
-;;
-resume|thaw)
-# Bind ehci for preventing error
-echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/bind
-# Bind snd_hda_intel for sound
-echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
-echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
-;;
-esac""" in open("/etc/pm/sleep.d/05_Sound").read():
-        files.update({'suspend':True})
+    try:
+        if """#!/bin/sh
+    # File: "/etc/pm/sleep.d/05_Sound".
+    case "${1}" in
+    hibernate|suspend)
+    # Unbind ehci for preventing error
+    echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/unbind
+    # Unbind snd_hda_intel for sound
+    echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/unbind
+    echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/unbind
+    ;;
+    resume|thaw)
+    # Bind ehci for preventing error
+    echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/bind
+    # Bind snd_hda_intel for sound
+    echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
+    echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
+    ;;
+    esac""" in open("/etc/pm/sleep.d/05_Sound").read():
+            files.update({'suspend':True})
 
-    if """echo EHCI > /proc/acpi/wakeup
-echo HDEF > /proc/acpi/wakeup
-echo XHCI > /proc/acpi/wakeup
-echo LID0 > /proc/acpi/wakeup
-echo TPAD > /proc/acpi/wakeup
-echo TSCR > /proc/acpi/wakeup
-echo 300 > /sys/class/backlight/intel_backlight/brightness
-rfkill block bluetooth
-/etc/init.d/bluetooth stop""" in open("/etc/rc.local").read():
-        files.update({'rc':True})
+        if """echo EHCI > /proc/acpi/wakeup
+    echo HDEF > /proc/acpi/wakeup
+    echo XHCI > /proc/acpi/wakeup
+    echo LID0 > /proc/acpi/wakeup
+    echo TPAD > /proc/acpi/wakeup
+    echo TSCR > /proc/acpi/wakeup
+    echo 300 > /sys/class/backlight/intel_backlight/brightness
+    rfkill block bluetooth
+    /etc/init.d/bluetooth stop""" in open("/etc/rc.local").read():
+            files.update({'rc':True})
+    except IOError:
+        print("05_Sound not yet created")
 
     if """GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresume noswap i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic\"""" not in open("/etc/default/grub").read():
         files.update({'grub':True})
@@ -55,34 +58,39 @@ rfkill block bluetooth
     if "FingerLow" "5" in open("/usr/share/X11/xorg.conf.d/50-synaptics.conf").read():
         files.update({'touchpad':True})
 
-    if """#!/bin/bash
-xmodmap -e "keycode 225 = Super_L";
-xmodmap -e “add mod4 = Super_L”;""" in open("/home/" + username + "/.xmodmap").read():
-        files.update({'xmodmap':True})
-
-    if """"xdotool keyup F1; xdotool key alt+Left"
-F1
-"xdotool keyup F2; xdotool key alt+Right"
-F2
-"xdotool keyup F5; xdotool key super+a"
-F5
-"xdotool keyup F3; xdotool key ctrl+r"
-F3
-"xdotool keyup F4; xdotool key F11"
-F4
-"xdotool keyup shift+BackSpace; xdotool key Delete; xdotool keydown shift"
-shift+BackSpace
-"xdotool keyup F6; xdotool key XF86MonBrightnessDown"
-F6
-"xdotool keyup F7; xdotool key XF86MonBrightnessUp"
-F7
-"xdotool keyup F8; xdotool key XF86AudioMute"
-F8
-"xdotool keyup F9; xdotool key XF86AudioLowerVolume"
-F9
-"xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
-F10""" in open("/home/" + username + "/.xbindkeysrc").read():
-        files.update({'xdotool':True})
+    try:
+        if """#!/bin/bash
+    xmodmap -e "keycode 225 = Super_L";
+    xmodmap -e “add mod4 = Super_L”;""" in open("/home/" + username + "/.xmodmap").read():
+            files.update({'xmodmap':True})
+    except IOError:
+        print("xmodmap not yet created")
+    try:
+        if """"xdotool keyup F1; xdotool key alt+Left"
+    F1
+    "xdotool keyup F2; xdotool key alt+Right"
+    F2
+    "xdotool keyup F5; xdotool key super+a"
+    F5
+    "xdotool keyup F3; xdotool key ctrl+r"
+    F3
+    "xdotool keyup F4; xdotool key F11"
+    F4
+    "xdotool keyup shift+BackSpace; xdotool key Delete; xdotool keydown shift"
+    shift+BackSpace
+    "xdotool keyup F6; xdotool key XF86MonBrightnessDown"
+    F6
+    "xdotool keyup F7; xdotool key XF86MonBrightnessUp"
+    F7
+    "xdotool keyup F8; xdotool key XF86AudioMute"
+    F8
+    "xdotool keyup F9; xdotool key XF86AudioLowerVolume"
+    F9
+    "xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
+    F10""" in open("/home/" + username + "/.xbindkeysrc").read():
+            files.update({'xdotool':True})
+    except IOError:
+        print("xbindkeysrc not yet created")
 
     return files;
 
