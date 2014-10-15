@@ -51,7 +51,7 @@ if manual is '1':
         openJ = raw_input("Install Open JDK 7? [Y/n]? ")
 else:
     guake = git = numix = driver = wing = keys = battery = chrome = gimp = libre = vlc = bit = glipper = scroll = java = 'y'
-
+    openJ = 'n'
 if java is 'y' or java is 'Y':
         raw_input("Follow the on-screen instructions to finish the Java installation. It might take awhile, but this is the last prompt from me")
         os.system("add-apt-repository -y ppa:webupd8team/java")
