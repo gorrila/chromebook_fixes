@@ -1,11 +1,10 @@
-import getpass
-
 __author__ = 'sinan.boecker'
 
 import os
 import fileinput
 import sys
 import subprocess
+import getpass
 
 
 def apply_general_fixes():

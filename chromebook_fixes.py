@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from fixes import elementary_specific, general_fixes, device_specific_fixes
 
 __author__ = 'Ian Richardson'
 
@@ -8,24 +7,25 @@ __author__ = 'Ian Richardson'
 
 import os
 import platform
+from fixes import elementary_specific, general_fixes, device_specific_fixes
 
 
 print("Script made by Ian Richardson / github.com/iantrich/, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
-cont = raw_input("Use at your own risk. Do you wish to continue? [Y/n] ")
-if cont is not 'y' and cont is not 'Y':
+cont = raw_input("Use at your own risk. Do you wish to continue? [Y/n] \n")
+if cont != 'y' and cont != 'Y':
     exit()
 
-raw_input("Please connect to internet service before continuing. Hit Enter when ready...")
+raw_input("Please connect to internet service before continuing. Hit Enter when ready...\n")
 
 print("1. Install software manually\n2. Install all default software (Guake, git, Numix themes, wingpanel, tlp, Chrome, gimp, LibreOffice, VLC, qBittorrent, glipper, Natural Scrolling (OS X Style), and Oracle JDK 7")
-install_mode = raw_input("Choose your method: ")
+install_mode = raw_input("Choose your method: \n")
 
 print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
-hardware_model = raw_input("")
+hardware_model = raw_input("\n")
 
-install_kernel = raw_input("Install Kernel 3.17? [Y/n] ")
-if cont is not 'y' and cont is not 'Y':
+install_kernel = raw_input("Install Kernel 3.17? [Y/n] \n")
+if cont != 'y' and cont != 'Y':
     install_kernel.install_3_17()
 
 distro_name, distro_version, distro_id = platform.linux_distribution() #Get Distroinformation
