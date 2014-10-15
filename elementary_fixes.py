@@ -110,12 +110,12 @@ if cont is not 'y' and cont is not 'Y':
 raw_input("Please connect to internet service before continuing. Hit Enter when ready...")
 
 if 'Luna' in open("/etc/os-release").read():
-    version = 1
+    version = "luna"
 elif 'Freya' in open("/etc/os-release").read():
     version = 'freya'
-elif 'Freya' in open("/etc/os-release").read():
+elif 'precise' in open("/etc/os-release").read():
     version = '12.04'
-elif 'Freya' in open("/etc/os-release").read():
+elif 'trusty' in open("/etc/os-release").read():
     version = '14.04'
 else:
     version = 'other'
@@ -129,7 +129,7 @@ print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
 model = raw_input("")
 
 if manual is '1':
-    if version is 'freya' or version is '12.04':
+    if version is 'freya' or version is '14.04':
         driver = raw_input("Install ChromeOS touchpad driver? [Y/n]? ")
     guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
     git = raw_input("Install git? [Y/n] ")
