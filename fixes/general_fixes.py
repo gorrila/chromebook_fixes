@@ -1,8 +1,17 @@
+import getpass
+
 __author__ = 'sinan.boecker'
 
 import os
 import fileinput
 import sys
+import subprocess
+
+
+def apply_general_fixes():
+    fix_suspend()
+    fix_rclocal()
+    fix_grub()
 
 
 def fix_suspend():
@@ -59,25 +68,11 @@ def fix_grub():
 
 
 def fix_mediakeys():
-    if keys is 'y' or keys is 'Y':
-        if not files.get('xmodmap'):
-            os.system("apt-get install -y xbindkeys xdotool")
-            # Map Super_L to the Search key
-            # Create .xmodmap
-            if model is "2":
-                map = open("/home/" + username + "/.xmodmap", "w")
-                map.write("""#!/bin/bash
-        xmodmap -e "keycode 225 = Super_L";
-        xmodmap -e “add mod4 = Super_L”;""")
-                map.close()
-                os.system("chmod +x ~/.xmodmap")
-                os.system("ln -s ~/.xmodmap /etc/xdg/autostart/")
-
+        username = getpass.getuser()
         # Remap all remaining top row keys and Delete to Shift+Backspace
         # Create .xbindkeysrc
-        if not files.get("xdotool"):
-            xbind = open("/home/" + username + "/.xbindkeysrc", "w")
-            xbind.write(""""xdotool keyup F1; xdotool key alt+Left"
+        xbind = open("/home/" + username + "/.xbindkeysrc", "w")
+        xbind.write(""""xdotool keyup F1; xdotool key alt+Left"
         F1
         "xdotool keyup F2; xdotool key alt+Right"
         F2
@@ -99,7 +94,39 @@ def fix_mediakeys():
         F9
         "xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
         F10""")
-            os.system("chmod +x ~/.xbindkeysrc")
+        os.system("chmod +x ~/.xbindkeysrc")
 
         #Set Fullscreen toggle to be F4
         os.system("""gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F4']\"""")
+
+
+def adjust_touchpad_sensitivity():
+    # Adjust touchpad sensitivity
+    print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
+    section = False
+    for line in fileinput.input("/usr/share/X11/xorg.conf.d/50-synaptics.conf", inplace=True):
+        if section:
+            sys.stdout.write("""      Option "FingerLow" "5"
+          Option "FingerHigh" "16\"\n""")
+            section = False
+        if "input/event*" not in line:
+            sys.stdout.write(line)
+        else:
+            sys.stdout.write(line)
+            section = True
+
+
+def install_chromeos_touchpad_drivers():
+    driver = raw_input("Install ChromeOS touchpad driver? [Y/n]? ")
+    if driver is 'y' or driver is 'Y':
+        if not subprocess.Popen(["[ -f /usr/share/X11/xorg.conf.d/50-touchpad-cmt-peppy.conf]", ""], stdout=subprocess.PIPE).communicate()[0]:
+            os.system("add-apt-repository -y ppa:hugegreenbug/cmt")
+            os.system("apt-get update -y")
+            os.system("apt-get install -y libevdevc libgestures  xf86-input-cmt")
+            os.system("mv /usr/share/X11/xorg.conf.d/50-synaptics.conf /usr/share/X11/xorg.conf.d/50-synaptics.conf.old")
+            os.system("cp /usr/share/xf86-input-cmt/50-touchpad-cmt-peppy.conf /usr/share/X11/xorg.conf.d/")
+
+
+def upgrade_xserver():
+    print("Upgrade Xserver for better performance")
+    os.system("apt-get install -y xserver-xorg-lts-trusty")

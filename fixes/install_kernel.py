@@ -4,9 +4,13 @@ import urllib
 import os
 import platform
 import subprocess
+import getpass
 
 
-def install_kernel(username):
+def install_3_17():
+
+    username = getpass.getuser()
+
     update_kernel = False
 
     # Check if kernel is up to date
