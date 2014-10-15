@@ -11,6 +11,88 @@ import sys
 import platform
 import subprocess
 
+def checkFiles(username):
+    files = {'kernel':False, 'suspend':False, 'files':False, 'grub':False, 'touchpad':False, 'xmodmap':False, 'xdotool':False}
+
+    # Check if kernel is up to date
+    if '3.17.0-031700-generic' in subprocess.Popen(["uname", "-r"], stdout=subprocess.PIPE).communicate()[0]:
+        files.update({'kernel':True})
+
+    if """#!/bin/sh
+# File: "/etc/pm/sleep.d/05_Sound".
+case "${1}" in
+hibernate|suspend)
+# Unbind ehci for preventing error
+echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/unbind
+# Unbind snd_hda_intel for sound
+echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/unbind
+echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/unbind
+;;
+resume|thaw)
+# Bind ehci for preventing error
+echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/bind
+# Bind snd_hda_intel for sound
+echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
+echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
+;;
+esac""" in open("/etc/pm/sleep.d/05_Sound").read():
+        files.update({'suspend':True})
+
+    if """echo EHCI > /proc/acpi/wakeup
+echo HDEF > /proc/acpi/wakeup
+echo XHCI > /proc/acpi/wakeup
+echo LID0 > /proc/acpi/wakeup
+echo TPAD > /proc/acpi/wakeup
+echo TSCR > /proc/acpi/wakeup
+echo 300 > /sys/class/backlight/intel_backlight/brightness
+rfkill block bluetooth
+/etc/init.d/bluetooth stop""" in open("/etc/rc.local").read():
+        files.update({'rc':True})
+
+    if """GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresume noswap i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic\"""" not in open("/etc/default/grub").read():
+        files.update({'grub':True})
+
+    if "FingerLow" "5" in open("/usr/share/X11/xorg.conf.d/50-synaptics.conf").read():
+        files.update({'touchpad':True})
+
+    if """#!/bin/bash
+xmodmap -e "keycode 225 = Super_L";
+xmodmap -e “add mod4 = Super_L”;""" in open("/home/" + username + "/.xmodmap").read():
+        files.update({'xmodmap':True})
+
+    if """"xdotool keyup F1; xdotool key alt+Left"
+F1
+"xdotool keyup F2; xdotool key alt+Right"
+F2
+"xdotool keyup F5; xdotool key super+a"
+F5
+"xdotool keyup F3; xdotool key ctrl+r"
+F3
+"xdotool keyup F4; xdotool key F11"
+F4
+"xdotool keyup shift+BackSpace; xdotool key Delete; xdotool keydown shift"
+shift+BackSpace
+"xdotool keyup F6; xdotool key XF86MonBrightnessDown"
+F6
+"xdotool keyup F7; xdotool key XF86MonBrightnessUp"
+F7
+"xdotool keyup F8; xdotool key XF86AudioMute"
+F8
+"xdotool keyup F9; xdotool key XF86AudioLowerVolume"
+F9
+"xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
+F10""" in open("/home/" + username + "/.xbindkeysrc").read():
+        files.update({'xdotool':True})
+
+    return files;
+
+def checkRepos():
+    repos = subprocess.Popen(["find /etc/apt/", "-name *.list | xargs cat | grep  ^[[:space:]]*deb"], stdout=subprocess.PIPE).communicate()
+    installedRepos = {};
+
+    return installedRepos;
+
+
 print("Script made by Ian Richardson / github.com/iantrich/, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
 cont = raw_input("Use at your own risk. Do you wish to continue? [Y/n] ")
@@ -61,6 +143,10 @@ if manual is '1':
 else:
     guake = git = numix = driver = wing = keys = battery = chrome = gimp = libre = vlc = bit = glipper = scroll = java = 'y'
 
+files = checkFiles(username)
+
+repos = checkRepos()
+
 if java is 'y' or java is 'Y':
         raw_input("Follow the on-screen instructions to finish the Java installation. It might take awhile, but this is the last prompt from me")
         os.system("add-apt-repository -y ppa:webupd8team/java")
@@ -68,7 +154,7 @@ if java is 'y' or java is 'Y':
         os.system("apt-get install -y python-software-properties oracle-java7-installer")
 
 print("Check current kernel version")
-if '3.17.0-031700-generic' not in subprocess.Popen(["uname", "-r"], stdout=subprocess.PIPE).communicate()[0]:
+if not files.get('kernel'):
     print("Grabbing kernel 3.17 stable...may take a few moments")
     kernel = urllib.URLopener()
     # Check if system is 32 or 64-bit
@@ -87,24 +173,7 @@ if '3.17.0-031700-generic' not in subprocess.Popen(["uname", "-r"], stdout=subpr
     os.system("dpkg -i ~/Downloads/*.deb")
     os.system("rm ~/Downloads/*.deb")
 
-if """#!/bin/sh
-# File: "/etc/pm/sleep.d/05_Sound".
-case "${1}" in
-hibernate|suspend)
-# Unbind ehci for preventing error
-echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/unbind
-# Unbind snd_hda_intel for sound
-echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/unbind
-echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/unbind
-;;
-resume|thaw)
-# Bind ehci for preventing error
-echo -n "0000:00:1d.0" | tee /sys/bus/pci/drivers/ehci-pci/bind
-# Bind snd_hda_intel for sound
-echo -n "0000:00:1b.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
-echo -n "0000:00:03.0" | tee /sys/bus/pci/drivers/snd_hda_intel/bind
-;;
-esac""" not in open("/etc/pm/sleep.d/05_Sound").read():
+if not files.get('suspend'):
     print("Fix suspend and boot times")
     sound = open("/etc/pm/sleep.d/05_Sound", "w")
     sound.write("""#!/bin/sh
@@ -128,15 +197,7 @@ esac""" not in open("/etc/pm/sleep.d/05_Sound").read():
     sound.close()
 os.system("chmod +x /etc/pm/sleep.d/05_Sound")
 
-if """echo EHCI > /proc/acpi/wakeup
-echo HDEF > /proc/acpi/wakeup
-echo XHCI > /proc/acpi/wakeup
-echo LID0 > /proc/acpi/wakeup
-echo TPAD > /proc/acpi/wakeup
-echo TSCR > /proc/acpi/wakeup
-echo 300 > /sys/class/backlight/intel_backlight/brightness
-rfkill block bluetooth
-/etc/init.d/bluetooth stop""" not in open("/etc/rc.local").read():
+if not files.get('rc'):
     # Edit rc.local
     for line in fileinput.input("/etc/rc.local", inplace=True):
         if "By default" not in line:
@@ -152,7 +213,7 @@ rfkill block bluetooth
     rfkill block bluetooth
     /etc/init.d/bluetooth stop""")
 
-if """GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresume noswap i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic\"""" not in open("/etc/default/grub").read():
+if not files.get('grub'):
     # Edit grub and update
     for line in fileinput.input("/etc/default/grub", inplace=True):
         if "GRUB_CMDLINE_LINUX_DEFAULT" not in line:
@@ -163,7 +224,7 @@ if """GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresum
     os.system("update-grub2")
 
 if version is 'luna' or '12.04':
-    if "FingerLow" "5" not in open("/usr/share/X11/xorg.conf.d/50-synaptics.conf").read():
+    if not files.get('touchpad'):
         # Adjust touchpad sensitivity
         print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
         section = False
@@ -177,7 +238,6 @@ if version is 'luna' or '12.04':
             else:
                 sys.stdout.write(line)
                 section = True
-
 
     print("Upgrade Xserver for better performance")
     os.system("apt-get install -y xserver-xorg-lts-trusty")
@@ -205,7 +265,7 @@ if version is 'freya' or '14.04':
             os.system("mv /usr/share/X11/xorg.conf.d/50-synaptics.conf /usr/share/X11/xorg.conf.d/50-synaptics.conf.old")
             os.system("cp /usr/share/xf86-input-cmt/50-touchpad-cmt-peppy.conf /usr/share/X11/xorg.conf.d/")
     else:
-        if "FingerLow" "5" not in open("/usr/share/X11/xorg.conf.d/50-synaptics.conf").read():
+        if not files.get('touchpad'):
             # Adjust touchpad sensitivity
             print("Adjusting touchpad to be more sensitive as ChromeOS touchpad driver had not been backported to 12.04 yet")
             section = False
@@ -234,9 +294,7 @@ if git is 'y' or git is 'Y':
     os.system("apt-get install -y git")
 
 if keys is 'y' or keys is 'Y':
-    if """#!/bin/bash
-xmodmap -e "keycode 225 = Super_L";
-xmodmap -e “add mod4 = Super_L”;""" not in open("/home/" + username + "/.xmodmap").read():
+    if not files.get('xmodmap'):
         os.system("apt-get install -y xbindkeys xdotool")
         # Map Super_L to the Search key
         # Create .xmodmap
@@ -251,28 +309,7 @@ xmodmap -e “add mod4 = Super_L”;""" not in open("/home/" + username + "/.xmo
 
     # Remap all remaining top row keys and Delete to Shift+Backspace
     # Create .xbindkeysrc
-    if """"xdotool keyup F1; xdotool key alt+Left"
-F1
-"xdotool keyup F2; xdotool key alt+Right"
-F2
-"xdotool keyup F5; xdotool key super+a"
-F5
-"xdotool keyup F3; xdotool key ctrl+r"
-F3
-"xdotool keyup F4; xdotool key F11"
-F4
-"xdotool keyup shift+BackSpace; xdotool key Delete; xdotool keydown shift"
-shift+BackSpace
-"xdotool keyup F6; xdotool key XF86MonBrightnessDown"
-F6
-"xdotool keyup F7; xdotool key XF86MonBrightnessUp"
-F7
-"xdotool keyup F8; xdotool key XF86AudioMute"
-F8
-"xdotool keyup F9; xdotool key XF86AudioLowerVolume"
-F9
-"xdotool keyup F10; xdotool key XF86AudioRaiseVolume"
-F10""" not in open("/home/" + username + "/.xbindkeysrc").read():
+    if not files.get("xdotool"):
         xbind = open("/home/" + username + "/.xbindkeysrc", "w")
         xbind.write(""""xdotool keyup F1; xdotool key alt+Left"
     F1
@@ -304,7 +341,7 @@ F10""" not in open("/home/" + username + "/.xbindkeysrc").read():
 if openJ is 'y' or openJ is 'Y':
     os.system("apt-get install -y openjdk-7-jdk")
 
-if keys is 'y' or keys is 'Y':
+if battery is 'y' or battery is 'Y':
     os.system("add-apt-repository -y ppa:linrunner/tlp")
     os.system("apt-get update -y")
     os.system("apt-get install -y tlp tlp-rdw")
@@ -397,3 +434,4 @@ os.system("apt-get autoremove -y")
 # Restart the system
 raw_input("Your system will now reboot so that all changes can take effect. Thanks for using my script and to all those who offered suggestions")
 os.system("reboot")
+
