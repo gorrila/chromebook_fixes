@@ -6,7 +6,7 @@ __author__ = 'Ian Richardson'
 
 import os
 import platform
-from fixes import elementary_specific, general_fixes, device_specific_fixes
+from fixes import elementary_specific, general_fixes, device_specific_fixes, install_packages
 
 print("Script made by Ian Richardson / github.com/iantrich/, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
@@ -32,20 +32,20 @@ install_kernel = raw_input("Install Kernel 3.17? [Y/n] ")
 if cont is not 'y' and cont is not 'Y':
     install_kernel.install_3_17()
 
-
+install_packages.install_additional_packages(install_mode, username)
 
 general_fixes.apply_general_fixes() #For all distros and versions
 
 keys = raw_input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]?")
 if keys == "y" or keys == "Y":
     os.system("apt-get install -y xbindkeys xdotool")
-    general_fixes.fix_mediakeys()
+    general_fixes.fix_mediakeys(username)
 
 if hardware_model == "1": #C720 specific
     pass
 elif hardware_model == "2": #HP14 specific
     if keys == "y" or keys == "Y":
-        device_specific_fixes.map_superkey_hp14()
+        device_specific_fixes.map_superkey_hp14(username)
 
 #Distro specific fixes
 if distro_name == "Ubuntu":
@@ -65,6 +65,8 @@ elif distro_name == '"elementary OS"':
         general_fixes.install_chromeos_touchpad_drivers()
 else:
     print "Your distribution is not supported. No specific fixes applied."
+
+
 
 print("Installing any remaining dependencies")
 os.system("apt-get install -f -y")
