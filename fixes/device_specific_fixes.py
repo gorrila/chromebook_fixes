@@ -1,9 +1,9 @@
-import getpass
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 __author__ = 'sinan.boecker'
 
 import os
-
+import getpass
 
 def map_superkey_hp14():
     username = getpass.getuser()

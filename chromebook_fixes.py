@@ -1,22 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from fixes import elementary_specific, general_fixes, device_specific_fixes
-
 __author__ = 'Ian Richardson'
 
 # You must run this file as superuser
 
 import os
 import platform
-
+from fixes import elementary_specific, general_fixes, device_specific_fixes
 
 print("Script made by Ian Richardson / github.com/iantrich/, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
 cont = raw_input("Use at your own risk. Do you wish to continue? [Y/n] ")
-if cont is not 'y' and cont is not 'Y':
+if cont != 'y' and cont != 'Y':
     exit()
 
 raw_input("Please connect to internet service before continuing. Hit Enter when ready...")
+
+distro_name, distro_version, distro_id = platform.linux_distribution() #Get Distroinformation
+
+print "\nDistribution: \t" + distro_name + "\nVersion: \t" + distro_version + "\n"
 
 print("1. Install software manually\n2. Install all default software (Guake, git, Numix themes, wingpanel, tlp, Chrome, gimp, LibreOffice, VLC, qBittorrent, glipper, Natural Scrolling (OS X Style), and Oracle JDK 7")
 install_mode = raw_input("Choose your method: ")
@@ -28,7 +30,7 @@ install_kernel = raw_input("Install Kernel 3.17? [Y/n] ")
 if cont is not 'y' and cont is not 'Y':
     install_kernel.install_3_17()
 
-distro_name, distro_version, distro_id = platform.linux_distribution() #Get Distroinformation
+
 
 general_fixes.apply_general_fixes() #For all distros and versions
 
