@@ -5,6 +5,7 @@ import platform
 import urllib
 
 
+#TODO put all the packages in one apt-get install
 def install_additional_packages(install_mode, username):
     if install_mode == '1':
         guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
@@ -18,6 +19,7 @@ def install_additional_packages(install_mode, username):
         glipper = raw_input("Install glipper clibboard manager? [Y/n]? ")
         scroll = raw_input("Install OS X style natural scrolling? [Y/n]? ")
         java = raw_input("Install Oracle Java 7? [Y/n]? ")
+        openJ = "n"
         if java != 'y' and java != 'Y':
             openJ = raw_input("Install Open JDK 7? [Y/n]? ")
     else:
