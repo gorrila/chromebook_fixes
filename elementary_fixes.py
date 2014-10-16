@@ -13,7 +13,7 @@ import platform
 print("Script made by Ian Richardson / iantrich.com, for public use")
 print("I take no responsibility should anything go wrong while using this script.")
 cont = raw_input("Use at your own risk. Do you wish to continue? [Y/n] ")
-if cont is not 'y' and cont is not 'Y':
+if cont != 'y' and cont != 'Y':
     exit()
 
 raw_input("Please connect to internet service before continuing. Hit Enter when ready...")
@@ -29,13 +29,13 @@ username = raw_input("Carefully enter your username: ")
 print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
 model = raw_input("")
 
-if manual is '1':
-    if version is '2':
+if manual == '1':
+    if version == '2':
         driver = raw_input("Install ChromeOS touchpad driver? [Y/n]? ")
     guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
     git = raw_input("Install git? [Y/n] ")
     numix = raw_input("Install the beautiful numix theme and elementary tweaks? [Y/n]? ")
-    if version is '1':
+    if version == '1':
         wing = raw_input("Install slim and super wingpanel? If you don't know what they are look it up. [Y/n} ")
     keys = raw_input("Remap Left, Right, Refresh, Display, Window, Search(Super_L) and Shift+Backspace(Delete) to function properly? The Search button will only be properly mapped on the HP 14. [Y/n]? ")
     battery = raw_input("Install TLP Battery Saver? [Y/n]? ")
@@ -47,12 +47,12 @@ if manual is '1':
     glipper = raw_input("Install glipper clibboard manager? [Y/n]? ")
     scroll = raw_input("Install OS X style natural scrolling? [Y/n]? ")
     java = raw_input("Install Oracle Java 7? [Y/n]? ")
-    if java is not 'y' and java is not 'Y':
+    if java != 'y' and java != 'Y':
         openJ = raw_input("Install Open JDK 7? [Y/n]? ")
 else:
     guake = git = numix = driver = wing = keys = battery = chrome = gimp = libre = vlc = bit = glipper = scroll = java = 'y'
     openJ = 'n'
-if java is 'y' or java is 'Y':
+if java == 'y' or java == 'Y':
         raw_input("Follow the on-screen instructions to finish the Java installation. It might take awhile, but this is the last prompt from me")
         os.system("add-apt-repository -y ppa:webupd8team/java")
         os.system("apt-get update -y")
@@ -61,7 +61,7 @@ if java is 'y' or java is 'Y':
 print("Grabbing kernel 3.17 stable...may take a few moments")
 kernel = urllib.URLopener()
 # Check if system is 32 or 64-bit
-if platform.architecture()[0] is "64bit":
+if platform.architecture()[0] == "64bit":
     kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-headers-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
     kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb", "/home/" + username + "/Downloads/linux-image-3.17.0-031700-generic_3.17.0-031700.201410060605_amd64.deb")
 else:
@@ -123,7 +123,7 @@ for line in fileinput.input("/etc/default/grub", inplace=True):
 os.system("update-grub")
 os.system("update-grub2")
 
-if version is '1':
+if version == '1':
     # Upgrade Xserver for better performance
     os.system("apt-get install -y xserver-xorg-lts-trusty")
 
@@ -141,45 +141,45 @@ if version is '1':
             sys.stdout.write(line)
             section = True
 
-    if numix is 'y' or numix is 'Y':
+    if numix == 'y' or numix == 'Y':
         os.system("add-apt-repository -y ppa:numix/ppa")
         os.system("add-apt-repository -y ppa:versable/elementary-update")
         os.system("apt-get update -y")
         os.system("apt-get install -y numix-gtk-theme numix-icon-theme-circle elementary-tweaks")
 
-    if wing is 'y' or wing is 'Y':
-        if numix is not 'y' and numix is not 'Y':
+    if wing == 'y' or wing == 'Y':
+        if numix != 'y' and numix != 'Y':
             os.system("add-apt-repository ppa:numix/ppa")
             os.system("add-apt-repository ppa:versable/elementary-update")
             os.system("apt-get update")
     os.system("apt-get install wingpanel-slim super-wingpanel")
 
-if version is '2':
-    if driver is 'y' or driver is 'Y':
+if version == '2':
+    if driver == 'y' or driver == 'Y':
         os.system("add-apt-repository -y ppa:hugegreenbug/cmt")
         os.system("apt-get update -y")
         os.system("apt-get install -y libevdevc libgestures  xf86-input-cmt")
         os.system("mv /usr/share/X11/xorg.conf.d/50-synaptics.conf /usr/share/X11/xorg.conf.d/50-synaptics.conf.old")
         os.system("cp /usr/share/xf86-input-cmt/50-touchpad-cmt-peppy.conf /usr/share/X11/xorg.conf.d/")
 
-if guake is 'y' or guake is 'Y':
+if guake == 'y' or guake == 'Y':
     os.system("apt-get install -y guake")
     os.system("ln -s /usr/share/applications/guake.desktop /etc/xdg/autostart/")
 
-if git is 'y' or git is 'Y':
+if git == 'y' or git == 'Y':
     os.system("apt-get install -y git")
 
-if numix is 'y' or numix is 'Y' and version is '2':
+if numix == 'y' or numix == 'Y' and version == '2':
     os.system("add-apt-repository -y ppa:numix/ppa")
     os.system("add-apt-repository -y ppa:mpstark/elementary-tweaks-daily")
     os.system("apt-get update -y")
     os.system("apt-get install -y numix-gtk-theme numix-icon-theme-circle elementary-tweaks")
 
-if keys is 'y' or keys is 'Y':
+if keys == 'y' or keys == 'Y':
     os.system("apt-get install -y xbindkeys xdotool")
     # Map Super_L to the Search key
     # Create .xmodmap
-    if model is "2":
+    if model == "2":
         map = open("/home/" + username + "/.xmodmap", "w")
         map.write("""#!/bin/bash
 xmodmap -e "keycode 225 = Super_L";
@@ -217,17 +217,17 @@ F10""")
     #Set Fullscreen toggle to be F4
     os.system("""gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['F4']\"""")
 
-if openJ is 'y' or openJ is 'Y':
+if openJ == 'y' or openJ == 'Y':
     os.system("apt-get install -y openjdk-7-jdk")
 
-if keys is 'y' or keys is 'Y':
+if keys == 'y' or keys == 'Y':
     os.system("add-apt-repository -y ppa:linrunner/tlp")
     os.system("apt-get update -y")
     os.system("apt-get install -y tlp tlp-rdw")
 
-if chrome is 'y' or chrome is 'Y':
+if chrome == 'y' or chrome == 'Y':
     print("Downloading Chrome. This may take a few moments...")
-    if platform.architecture()[0] is "64bit":
+    if platform.architecture()[0] == "64bit":
         kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_amd64.deb")
     else:
         kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_i386.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_i386.deb")
@@ -235,22 +235,22 @@ if chrome is 'y' or chrome is 'Y':
     os.system("rm ~/Downloads/*.deb")
     os.system("mv /usr/share/applications/google-chrome.desktop /usr/share/applications/google-chrome-stable.desktop")
 
-if gimp is 'y' or gimp is 'Y':
+if gimp == 'y' or gimp == 'Y':
     os.system("apt-get install -y gimp")
 
-if libre is 'y' or libre is 'Y':
+if libre == 'y' or libre == 'Y':
     os.system("apt-get install -y libreoffice")
 
-if vlc is 'y' or vlc is 'Y':
+if vlc == 'y' or vlc == 'Y':
     os.system("apt-get install -y vlc")
 
-if bit is 'y' or bit is 'Y':
+if bit == 'y' or bit == 'Y':
     os.system("apt-get install -y qbittorrent")
 
-if glipper is 'y' or glipper is 'Y':
+if glipper == 'y' or glipper == 'Y':
     os.system("apt-get install -y glipper")
 
-if scroll is 'y' or scroll is 'Y':
+if scroll == 'y' or scroll == 'Y':
     os.system("add-apt-repository -y ppa:zedtux/naturalscrolling")
     os.system("apt-get update -y")
     os.system("apt-get install -y naturalscrolling")
