@@ -2,9 +2,10 @@ __author__ = 'sinan.boecker'
 
 import os
 import platform
+import urllib
 
 
-def install_additional_packages(install_mode):
+def install_additional_packages(install_mode, username):
     if install_mode == '1':
         guake = raw_input("Install Guake: A dropdown terminal? [Y/n]? ")
         git = raw_input("Install git? [Y/n] ")
@@ -34,6 +35,7 @@ def install_additional_packages(install_mode):
 
     if chrome == 'y' or chrome == 'Y':
         print("Downloading Chrome. This may take a few moments...")
+        kernel = urllib.URLopener()
         if platform.architecture()[0] == "64bit":
             kernel.retrieve("https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb", "/home/" + username + "/Downloads/google-chrome-stable_current_amd64.deb")
         else:

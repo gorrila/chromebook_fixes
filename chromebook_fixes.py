@@ -16,6 +16,8 @@ if cont != 'y' and cont != 'Y':
 
 raw_input("Please connect to internet service before continuing. Hit Enter when ready...")
 
+username = raw_input("Carefully enter your username: ")
+
 distro_name, distro_version, distro_id = platform.linux_distribution() #Get Distroinformation
 
 print "\nDistribution: \t" + distro_name + "\nVersion: \t" + distro_version + "\n"

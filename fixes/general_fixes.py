@@ -67,8 +67,7 @@ def fix_grub():
     os.system("update-grub2")
 
 
-def fix_mediakeys():
-        username = getpass.getuser()
+def fix_mediakeys(username):
         # Remap all remaining top row keys and Delete to Shift+Backspace
         # Create .xbindkeysrc
         xbind = open("/home/" + username + "/.xbindkeysrc", "w")
