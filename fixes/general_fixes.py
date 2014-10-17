@@ -8,9 +8,45 @@ import getpass
 
 
 def apply_general_fixes():
-    fix_suspend()
-    fix_rclocal()
+    #fix_suspend()
+    #fix_rclocal()
+    fix_unbindehci()
+    create_udev_rule()
     fix_grub()
+
+
+def create_udev_rule():
+    udev = open("/etc/udev/rules.d/10_disable-ehci.rules")
+    udev.write("""ACTION=="add", SUBSYSTEM=="pci", DRIVER=="ehci_hcd", \
+    RUN+="/bin/sh -c 'echo -n %k > %S%p/driver/unbind'""""")
+
+    os.system("update-initramfs -k all -u")
+
+
+def fix_unbindehci():
+    ehci = open("/etc/initramfs-tools/scripts/init-top/unbind_ehci")
+    ehci.write("""#####################
+    #!/bin/sh
+    PREREQ=""
+
+    prereqs()
+    {
+            echo "${PREREQ}"
+    }
+
+    case ${1} in
+            prereqs)
+                    prereqs
+                    exit 0
+                    ;;
+    esac
+
+    log_success_msg "Unbind ehci for preventing error"
+    echo -n "0000:00:1d.0" > /sys/bus/pci/drivers/ehci-pci/unbind
+    exit 0
+    #################""")
+    ehci.close()
+    os.system("chmod a+x /etc/initramfs-tools/scripts/init-top/unbind_ehci")
 
 
 def fix_suspend():
@@ -61,7 +97,8 @@ def fix_grub():
         if "GRUB_CMDLINE_LINUX_DEFAULT" not in line:
             sys.stdout.write(line)
         else:
-            sys.stdout.write("""GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresume noswap i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic\"""")
+            sys.stdout.write("""GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresume noswap i915.semaphores=0 i915.modeset=1 i915.use_mmio_flip=1 i915.powersave=1 i915.enable_ips=1 i915.disable_power_well=1 i915.enable_hangcheck=1 i915.enable_cmd_parser=1 i915.fastboot=0 i915.enable_ppgtt=1 i915.reset=0 i915.lvds_use_ssc=0 i915.enable_psr=0 drm.debug=0 drm.vblankoffdelay=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic\"""")
+
     os.system("update-grub")
     os.system("update-grub2")
 
