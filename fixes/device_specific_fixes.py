@@ -1,15 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 __author__ = 'sinan.boecker'
 
 import os
-import getpass
 
-
-def map_superkey_hp14():
-    username = getpass.getuser()
-
+def map_superkey_hp14(username):
     keymap = open("/home/" + username + "/.xmodmap", "w")
     keymap.write("""#!/bin/bash
         xmodmap -e "keycode 225 = Super_L";

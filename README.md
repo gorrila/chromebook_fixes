@@ -1,14 +1,14 @@
 This script is here to help apply a large amount of hot fixes for Linux on Chromebooks.
 
 # Supported Distros: #
-Ubuntu 12.xx based
-Ubuntu 14.04 based
-elementary OS 0.2 Luna
-elementary OS 0.3 Freya
+* Ubuntu 12.xx based
+* Ubuntu 14.04 based
+* elementary OS 0.2 Luna
+* elementary OS 0.3 Freya
 
 # Supported Chromebooks: #
-Acer C720
-HP Chromebook 14
+* Acer C720
+* HP Chromebook 14
 
 Other Distros and Chromebooks should also work but are untested.
 
