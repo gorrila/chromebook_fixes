@@ -3,7 +3,9 @@ __author__ = 'sinan.boecker'
 import os
 
 
-def elementary_tweaks(distro_version):
+def elementary_tweaks():
+    distro_name, distro_version, distro_id = platform.linux_distribution() #Get Distroinformation
+
     eos_tweaks = raw_input("Install elementary tweaks? [Y/n]? ")
     if eos_tweaks == 'y' or eos_tweaks == 'Y':
         if distro_version == "0.2":

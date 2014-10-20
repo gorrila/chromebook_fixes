@@ -97,7 +97,7 @@ def fix_grub():
         if "GRUB_CMDLINE_LINUX_DEFAULT" not in line:
             sys.stdout.write(line)
         else:
-            sys.stdout.write("""GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresume noswap i915.semaphores=0 i915.modeset=1 i915.use_mmio_flip=1 i915.powersave=1 i915.enable_ips=1 i915.disable_power_well=1 i915.enable_hangcheck=1 i915.enable_cmd_parser=1 i915.fastboot=0 i915.enable_ppgtt=1 i915.reset=0 i915.lvds_use_ssc=0 i915.enable_psr=0 drm.debug=0 drm.vblankoffdelay=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic\"""")
+            sys.stdout.write("""GRUB_CMDLINE_LINUX_DEFAULT="quiet splash add_efi_memmap boot=local noresume noswap i915.semaphores=0 i915.modeset=1 i915.use_mmio_flip=1 i915.powersave=1 i915.enable_ips=1 i915.disable_power_well=1 i915.enable_hangcheck=1 i915.enable_cmd_parser=1 i915.fastboot=0 i915.enable_ppgtt=1 i915.reset=0 i915.lvds_use_ssc=0 i915.enable_psr=0 drm.debug=0 drm.vblankoffdelay=1 tpm_tis.force=1 tpm_tis.interrupts=0 modprobe.blacklist=ehci_hcd,ehci_pci nmi_watchdog=0\"""")
 
     os.system("update-grub")
     os.system("update-grub2")

@@ -9,7 +9,7 @@ import subprocess
 def install_3_17():
     update_kernel = True
 
-    Check if kernel is up to date
+    #Check if kernel is up to date
     if '3.17.0-031700-generic' in subprocess.Popen(["uname", "-r"], stdout=subprocess.PIPE).communicate()[0]:
         print("Kernel 3.17 already installed.")
         return

@@ -22,18 +22,12 @@ distro_name, distro_version, distro_id = platform.linux_distribution() #Get Dist
 
 print "\nDistribution: \t" + distro_name + "\nVersion: \t" + distro_version + "\n"
 
-print("1. Install software manually\n2. Install all default software (Guake, git, Numix themes, wingpanel, tlp, Chrome, gimp, LibreOffice, VLC, qBittorrent, glipper, Natural Scrolling (OS X Style), and Oracle JDK 7\n3. Install no additional packages")
-install_mode = raw_input("Choose your method: ")
-
 print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
 hardware_model = raw_input("")
 
 install_kernel = raw_input("Install Kernel 3.17? [Y/n] ")
 if install_kernel == 'y' or install_kernel == 'Y':
     install_kernel.install_3_17()
-
-if install_mode != "3":
-    install_packages.install_additional_packages(install_mode, username)
 
 general_fixes.apply_general_fixes() #For all distros and versions
 
@@ -58,7 +52,8 @@ if distro_name == "Ubuntu":
         #TODO coming version, may need additional fixes
         pass
 elif distro_name == '"elementary OS"':
-    elementary_specific.elementary_tweaks(distro_version)
+    elementary_specific.elementary_tweaks()
+    elementary_specific.numix()
     if distro_version == "0.2": #Luna
         general_fixes.adjust_touchpad_sensitivity()
         elementary_specific.wingpanel()
@@ -67,6 +62,11 @@ elif distro_name == '"elementary OS"':
 else:
     print "Your distribution is not supported. No specific fixes applied."
 
+print("1. Install software manually\n2. Install all default software (Guake, git, Numix themes, wingpanel, tlp, Chrome, gimp, LibreOffice, VLC, qBittorrent, glipper, Natural Scrolling (OS X Style), and Oracle JDK 7\n3. Install no additional packages")
+install_mode = raw_input("Choose your method: ")
+
+if install_mode != "3":
+    install_packages.install_additional_packages(install_mode, username)
 
 print("Installing any remaining dependencies")
 os.system("apt-get install -f -y")
