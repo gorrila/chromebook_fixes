@@ -7,12 +7,13 @@ import subprocess
 
 
 def install_3_17():
-    update_kernel = False
+    update_kernel = True
 
-    # Check if kernel is up to date
+    Check if kernel is up to date
     if '3.17.0-031700-generic' in subprocess.Popen(["uname", "-r"], stdout=subprocess.PIPE).communicate()[0]:
-        update_kernel = True
-
+        print("Kernel 3.17 already installed.")
+        return
+        
     if update_kernel:
         print("\nGrabbing kernel 3.17 stable...may take a few moments")
         kernel = urllib.URLopener()
@@ -34,3 +35,12 @@ def install_3_17():
 
         os.system("rm /tmp/linux-headers-3.17*.deb")
         os.system("rm /tmp/linux-image-3.17*.deb")
+
+if __name__ == "__main__":
+    install_kernel = raw_input("Install Kernel 3.17? [Y/n] ")
+    if install_kernel == 'y' or install_kernel == 'Y':
+        install_3_17()
+    
+    reboot = raw_input("Reboot? [Y/n] ")
+    if reboot == 'y' or reboot == 'Y':
+        os.system("reboot")
