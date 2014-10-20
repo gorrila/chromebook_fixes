@@ -27,14 +27,14 @@ def install_3_17():
         kernel.retrieve("http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17-utopic/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb", "/tmp/linux-headers-3.17.0-031700_3.17.0-031700.201410060605_all.deb")
 
         print("\nRemove old kernel")
-        os.system("""apt-get remove --purge $(dpkg -l 'linux-image-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d')""")
+        subprocess.call("""apt-get remove --purge $(dpkg -l 'linux-image-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d')""")
 
         print("\nInstall kernel and delete .deb files\n")
-        os.system("dpkg -i /tmp/linux-headers-3.17*.deb")
-        os.system("dpkg -i /tmp/linux-image-3.17*.deb")
+        subprocess.call("dpkg -i /tmp/linux-headers-3.17*.deb")
+        subprocess.call("dpkg -i /tmp/linux-image-3.17*.deb")
 
-        os.system("rm /tmp/linux-headers-3.17*.deb")
-        os.system("rm /tmp/linux-image-3.17*.deb")
+        subprocess.call("rm /tmp/linux-headers-3.17*.deb")
+        subprocess.call("rm /tmp/linux-image-3.17*.deb")
 
 if __name__ == "__main__":
     install_kernel = raw_input("Install Kernel 3.17? [Y/n] ")
