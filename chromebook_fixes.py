@@ -22,17 +22,18 @@ distro_name, distro_version, distro_id = platform.linux_distribution() #Get Dist
 
 print "\nDistribution: \t" + distro_name + "\nVersion: \t" + distro_version + "\n"
 
-print("1. Install software manually\n2. Install all default software (Guake, git, Numix themes, wingpanel, tlp, Chrome, gimp, LibreOffice, VLC, qBittorrent, glipper, Natural Scrolling (OS X Style), and Oracle JDK 7")
+print("1. Install software manually\n2. Install all default software (Guake, git, Numix themes, wingpanel, tlp, Chrome, gimp, LibreOffice, VLC, qBittorrent, glipper, Natural Scrolling (OS X Style), and Oracle JDK 7\n3. Install no additional packages")
 install_mode = raw_input("Choose your method: ")
 
 print("What model do you have?\n1. C720\n2. HP 14\n3. Other")
 hardware_model = raw_input("")
 
 install_kernel = raw_input("Install Kernel 3.17? [Y/n] ")
-if cont is not 'y' and cont is not 'Y':
+if install_kernel == 'y' or install_kernel == 'Y':
     install_kernel.install_3_17()
 
-install_packages.install_additional_packages(install_mode, username)
+if install_mode != "3":
+    install_packages.install_additional_packages(install_mode, username)
 
 general_fixes.apply_general_fixes() #For all distros and versions
 
