@@ -16,7 +16,7 @@ def apply_general_fixes():
 
 
 def create_udev_rule():
-    udev = open("/etc/udev/rules.d/10_disable-ehci.rules")
+    udev = open("/etc/udev/rules.d/10_disable-ehci.rules", 'w+')
     udev.write("""ACTION=="add", SUBSYSTEM=="pci", DRIVER=="ehci_hcd", \
     RUN+="/bin/sh -c 'echo -n %k > %S%p/driver/unbind'""""")
 
@@ -24,7 +24,7 @@ def create_udev_rule():
 
 
 def fix_unbindehci():
-    ehci = open("/etc/initramfs-tools/scripts/init-top/unbind_ehci")
+    ehci = open("/etc/initramfs-tools/scripts/init-top/unbind_ehci", 'w+')
     ehci.write("""#####################
     #!/bin/sh
     PREREQ=""
@@ -51,7 +51,7 @@ def fix_unbindehci():
 
 def fix_suspend():
     print("Fix suspend and boot times")
-    sound = open("/etc/pm/sleep.d/05_Sound", "w")
+    sound = open("/etc/pm/sleep.d/05_Sound", "w+")
     sound.write("""#!/bin/sh
     # File: "/etc/pm/sleep.d/05_Sound".
     case "${1}" in
@@ -106,7 +106,7 @@ def fix_grub():
 def fix_mediakeys(username):
         # Remap all remaining top row keys and Delete to Shift+Backspace
         # Create .xbindkeysrc
-        xbind = open("/home/" + username + "/.xbindkeysrc", "w")
+        xbind = open("/home/" + username + "/.xbindkeysrc", "w+")
         xbind.write(""""xdotool keyup F1; xdotool key alt+Left"
         F1
         "xdotool keyup F2; xdotool key alt+Right"
