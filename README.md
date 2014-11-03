@@ -1,4 +1,16 @@
-There are two scripts here to help apply a large amount of hot fixes for elementary OS Luna and Frey on the HP Chromebook 14. This script should work for many other Chromebooks, but I've only personally tested it on my HP 14 for Luna but am told that it works well on Freya for a C720 as well.
+This script is here to help apply a large amount of hot fixes for Linux on Chromebooks.
+
+# Supported Distros: #
+* Ubuntu 12.xx based
+* Ubuntu 14.04 based
+* elementary OS 0.2 Luna
+* elementary OS 0.3 Freya
+
+# Supported Chromebooks: #
+* Acer C720
+* HP Chromebook 14
+
+Other Distros and Chromebooks should also work but are untested.
 
 # Usage: #
 1. Install elementary OS Luna/Freya using Chrubuntu to partition the drive and a live USB containing elementary OS Luna/Freya.
@@ -80,3 +92,6 @@ Tweaks / Installations:
 * Install Glipper Clipboard Manager
 
 * Install Natural Scrolling (OS X Style Scrolling) (Both, but more applicable for Freya as the ChromeOS touchpad driver disables touchpad settings in System Settings)
+
+# Known Issues: #
+(Freya on C720) - Wake from sleep causes problems.
